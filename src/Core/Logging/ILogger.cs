@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+using Core.JetBrains;
 
 namespace Core.Logging
 {

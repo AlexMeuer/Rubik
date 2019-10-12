@@ -1,6 +1,7 @@
+using Core.IoC;
 using UnityEngine;
 
-namespace Core
+namespace Game
 {
     public partial class EntryPoint : MonoBehaviour
     {
@@ -26,7 +27,7 @@ namespace Core
 
         private void OnDestroy()
         {
-            
+            IoC.Dispose();
         }
     }
 }

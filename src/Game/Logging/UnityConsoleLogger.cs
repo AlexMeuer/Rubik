@@ -1,5 +1,8 @@
-namespace Core.Logging
+using Core.Logging;
+
+namespace Game.Logging
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class UnityConsoleLogger : ILogger
     {
         public void Info(object o)
