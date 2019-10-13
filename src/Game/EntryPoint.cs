@@ -11,7 +11,9 @@ namespace Game
         {
             IoC.Initialize(new ContainerRegistrations());
 
-            new Rubik(cubesPerRow);
+            var cube = new Rubik(cubesPerRow);
+
+            StartCoroutine(cube.SpinForever());
         }
     }
 }
