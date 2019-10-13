@@ -50,13 +50,19 @@
     <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="EntryPoint_Unity.cs" />
+    <Compile Include="Extensions\FaceColorExtensions.cs" />
+    <Compile Include="Extensions\FloatExtensions.cs" />
+    <Compile Include="Extensions\Vector3Extensions.cs" />
+    <Compile Include="Instance.cs" />
     <Compile Include="Logging\UnityConsoleLogger.cs" />
+    <Compile Include="Piece.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rubik.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
-      <Project>{65b4645b-0657-4511-8731-0d77b2b065e0}</Project>
-      <Name>Infrastructure</Name>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{adf7623a-9968-48c9-9548-6afaedad99c3}</Project>
+      <Name>Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{1d31926c-f4dc-4a6e-a811-3a28d1826243}</Project>

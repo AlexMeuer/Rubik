@@ -146,9 +146,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 452402700}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dbf9b11a158b4cb1b0ac6d512d4f13d, type: 3}
+  m_Script: {fileID: -265846528, guid: b034924e595f049fbbb65717132d6da5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cubesPerRow: 3
 --- !u!4 &452402702
 Transform:
   m_ObjectHideFlags: 0

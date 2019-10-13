@@ -1,15 +1,17 @@
+using System.Collections;
 using Core.IoC;
-using Core.Logging;
 
 namespace Game
 {
     public partial class EntryPoint
     {
+        public int cubesPerRow = 3;
+        
         private void Initialise()
         {
-            IoC.Initialize(new ContainerRegistrations(),
-                            new Infrastructure.ContainerRegistrations());
-        }
+            IoC.Initialize(new ContainerRegistrations());
 
+            new Rubik(cubesPerRow);
+        }
     }
 }
