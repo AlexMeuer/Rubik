@@ -33,11 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SimpleInjector, Version=4.7.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99">
+      <HintPath>..\..\unity\Assets\bin\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorMap.cs" />
+    <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="FaceColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

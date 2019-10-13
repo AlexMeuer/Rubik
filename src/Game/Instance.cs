@@ -1,13 +1,16 @@
 using System;
-using System.Collections.Generic;
-using Core.IoC;
 using UnityEngine;
-using ILogger = Core.Logging.ILogger;
 using Object = UnityEngine.Object;
 
 namespace Game
 {
-    public abstract class Instance : IDisposable
+    public interface IInstance : IDisposable
+    {
+        Vector3 Position { get; set; }
+        void RotateAbout(Vector3 axis, float angle);
+    }
+    
+    public abstract class Instance : IInstance
     {
         public Vector3 Position
         {
@@ -24,10 +27,21 @@ namespace Game
             if (parent != null)
                 Self.transform.parent = parent.transform;
         }
+
+        public void RotateAbout(Vector3 axis, float angle)
+        {
+            Self.transform.RotateAround(Vector3.zero, axis, angle);
+        }
         
         public void Dispose()
         {
+            OnDispose();
+            
             Object.Destroy(Self);
+        }
+
+        protected virtual void OnDispose()
+        {
         }
 
         protected void SetAsChild(GameObject gameObject)

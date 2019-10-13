@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Game.Extensions
 {
     public static class FloatExtensions
@@ -5,6 +7,11 @@ namespace Game.Extensions
         public static float Map(this float oldVal, float oldMin, float oldMax, float newMin, float newMax)
         {
             return newMin + (newMax - newMin) * ((oldVal-oldMin) / (oldMax-oldMin));
+        }
+
+        public static bool NearlyEqual(this float a, float b, float tolerance = 0.000001f)
+        {
+            return a.Equals(b) || Mathf.Abs(a - b) < tolerance;
         }
     }
 }
