@@ -10,19 +10,9 @@ namespace Game
             Initialise();
         }
 
-        private void Update()
+        public void Update()
         {
-            
-        }
-
-        public void FixedUpdate()
-        {
-            
-        }
-
-        public void LateUpdate()
-        {
-            
+            dragListener.Poll();
         }
 
         private void OnDestroy()

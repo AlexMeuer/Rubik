@@ -1,4 +1,3 @@
-using System;
 using Core.Extensions;
 using Game.Cube.Stickers;
 using UnityEngine;
@@ -22,13 +21,11 @@ namespace Game.Cube
         private static string DebugName(StickerData sd) => "{0} {1}".Format(nameof(Piece), sd.Directions);
 
         public Piece(StickerData stickerData, IStickerFactory stickerFactory, GameObject parent = null)
-            : base(DebugName(stickerData), parent)
+            : base(DebugName(stickerData), GameObject.CreatePrimitive(PrimitiveType.Cube), parent)
         {
             this.stickerData = stickerData;
 
-            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f);
-            SetAsChild(cube);
+            Self.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f);
             
             foreach (var sticker in stickerFactory.Create(stickerData))
             {

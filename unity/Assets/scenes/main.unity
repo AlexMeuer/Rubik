@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: -265846528, guid: b034924e595f049fbbb65717132d6da5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubesPerRow: 4
+  cubesPerRow: 3
 --- !u!4 &452402702
 Transform:
   m_ObjectHideFlags: 0

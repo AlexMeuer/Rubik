@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Domain;
 using Game.Extensions;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.Cube.Stickers
 {
@@ -31,6 +33,10 @@ namespace Game.Cube.Stickers
         private static GameObject Create(Vector3 direction, int multiplier, FaceColor faceColor)
         {
             var sticker = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+            sticker.name = faceColor.ToString();
+            
+            Object.Destroy(sticker.GetComponent<BoxCollider>());
             
             sticker.transform.localScale = new Vector3(0.8f, 0.8f, 0.1f);
             

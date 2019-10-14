@@ -1,8 +1,11 @@
 using System.Collections;
 using Core.IoC;
+using Core.TinyMessenger;
 using Game.Cube;
 using Game.Cube.Stickers;
+using Game.Messages;
 using UnityEngine;
+using ILogger = Core.Logging.ILogger;
 
 namespace Game
 {
@@ -10,14 +13,26 @@ namespace Game
     {
         public int cubesPerRow = 3;
         public RubiksCube cube;
+        private ITinyMessengerHub messengerHub;
+        private IDragListener dragListener;
+        private TinyMessageSubscriptionToken debugStartCoroutineSubscriptionToken;
         
         private void Initialise()
         {
-            IoC.Initialize(new ContainerRegistrations(), new Domain.ContainerRegistrations());
+            IoC.Initialize(
+                new Core.ContainerRegistrations(),
+                new Domain.ContainerRegistrations(),
+                new ContainerRegistrations());
 
-            cube = new RubiksCube(cubesPerRow, IoC.Resolve<IStickerDataFactory>(), IoC.Resolve<IStickerFactory>());
+            messengerHub = IoC.Resolve<ITinyMessengerHub>();
+            
+            dragListener = IoC.Resolve<IDragListener>();
 
-            StartCoroutine(Demo());
+            cube = new RubiksCube(cubesPerRow,IoC.Resolve<ILogger>(),  messengerHub, IoC.Resolve<IStickerDataFactory>(), IoC.Resolve<IStickerFactory>());
+
+            debugStartCoroutineSubscriptionToken =
+                messengerHub.Subscribe<DebugStartCoroutine>(dscr => StartCoroutine(dscr.Coroutine));
+//            StartCoroutine(Demo());
         }
 
         private IEnumerator Demo()

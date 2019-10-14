@@ -1,8 +1,10 @@
+using System;
 using Core.IoC;
-using Core.Logging;
 using Game.Cube.Stickers;
 using Game.Logging;
 using SimpleInjector;
+using UnityEngine;
+using ILogger = Core.Logging.ILogger;
 
 namespace Game
 {
@@ -13,6 +15,13 @@ namespace Game
             Singleton<ILogger, UnityConsoleLogger>(container);
             Transient<IStickerDataFactory, StickerDataFactory>(container);
             Transient<IStickerFactory, StickerFactory>(container);
+            
+            if (Application.isEditor)
+                Singleton<IDragListener, MouseDragListener>(container);
+            else
+                throw new NotImplementedException();
+            
+            container.RegisterInstance(Camera.main);
         }
     }
 }

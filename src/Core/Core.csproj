@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IoC\ContainerRegistrationsBase.cs" />
     <Compile Include="IoC\IContainerRegistrations.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\PrefixedLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TinyMessenger\TinyMessenger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

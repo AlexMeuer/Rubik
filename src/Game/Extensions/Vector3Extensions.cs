@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.Extensions
@@ -10,6 +11,24 @@ namespace Game.Extensions
                 v.x.Map(oldMin, oldMax, newMin, newMax),
                 v.y.Map(oldMin, oldMax, newMin, newMax),
                 v.z.Map(oldMin, oldMax, newMin, newMax));
+        }
+
+        public static Vector3 Abs(this Vector3 v)
+        {
+            return new Vector3(Mathf.Abs(v.x), Mathf.Abs(v.y), Mathf.Abs(v.z));
+        }
+
+        public static Vector3Int ToIntegerAxis(this Vector3 v)
+        {
+            var abs = v.Abs();
+
+            if (abs.x > abs.y && abs.x > abs.z)
+                return new Vector3Int(Math.Sign(v.x), 0, 0);
+
+            if (abs.y > abs.x && abs.y > abs.z)
+                return new Vector3Int(0, Math.Sign(v.y), 0);
+
+            return new Vector3Int(0, 0, Math.Sign(v.z));
         }
         
         public static Vector3Int Round(this Vector3 v)

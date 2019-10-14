@@ -37,9 +37,9 @@ namespace Game.Cube
                 rotationStartListener(piece, reverse);
             }
             
-            var angle = reverse ? -1 : 1;
+            var angle = reverse ? -3 : 3;
 
-            for (var i = 0; i < 90; ++i)
+            for (var i = 0; i < 30; ++i)
             {
                 foreach (var piece in piecesToRotate)
                 {
