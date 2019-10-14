@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\RotateSliceCommand.cs" />
     <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="Cube\Piece.cs" />
     <Compile Include="Cube\RubiksCube.cs" />

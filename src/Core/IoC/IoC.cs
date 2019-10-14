@@ -14,6 +14,8 @@ namespace Core.IoC
             {
                 r.RegisterAll(container);
             }
+            
+            container.Verify();
         }
         
         public static T Resolve<T>() where T : class

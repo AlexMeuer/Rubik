@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Core.Command;
 using Core.IoC;
 using Core.TinyMessenger;
 using Game.Cube;
@@ -9,7 +11,7 @@ using ILogger = Core.Logging.ILogger;
 
 namespace Game
 {
-    public partial class EntryPoint
+    public partial class EntryPoint : ICommandExecutor
     {
         public int cubesPerRow = 3;
         public RubiksCube cube;
@@ -22,7 +24,7 @@ namespace Game
             IoC.Initialize(
                 new Core.ContainerRegistrations(),
                 new Domain.ContainerRegistrations(),
-                new ContainerRegistrations());
+                new ContainerRegistrations(commandExecutor: this));
 
             messengerHub = IoC.Resolve<ITinyMessengerHub>();
             
@@ -32,28 +34,26 @@ namespace Game
 
             debugStartCoroutineSubscriptionToken =
                 messengerHub.Subscribe<DebugStartCoroutine>(dscr => StartCoroutine(dscr.Coroutine));
-//            StartCoroutine(Demo());
+            StartCoroutine(Demo());
         }
 
         private IEnumerator Demo()
         {
             yield return new WaitForSeconds(3f);
+
+            var handler = IoC.Resolve<ICommandHandler>();
             
             for (;;)
             {
-                var slice = cube.FindXAxisSlice(Vector3.one * 0.5f);
-                yield return slice.Rotate90Degrees(false);
-                slice = cube.FindYAxisSlice(Vector3.one * 0.5f);
-                yield return slice.Rotate90Degrees(false);
-                slice = cube.FindZAxisSlice(Vector3.one * 0.5f);
-                yield return slice.Rotate90Degrees(false);
-                slice = cube.FindXAxisSlice(Vector3.one * 1.5f);
-                yield return slice.Rotate90Degrees(false);
-                slice = cube.FindYAxisSlice(Vector3.one * -1.5f);
-                yield return slice.Rotate90Degrees(false);
-                slice = cube.FindZAxisSlice(Vector3.one * -2.5f);
-                yield return slice.Rotate90Degrees(false);
+                handler.UndoLast();
+                
+                yield return new WaitForSeconds(5f);
             }
+        }
+
+        public void HandleExecution(Func<IEnumerator> execution)
+        {
+            StartCoroutine(execution());
         }
     }
 }

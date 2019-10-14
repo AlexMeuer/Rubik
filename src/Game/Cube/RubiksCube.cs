@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Command;
 using Core.IoC;
 using Core.TinyMessenger;
+using Game.Command;
 using Game.Cube.Stickers;
 using Game.Extensions;
 using Game.Messages;
@@ -68,52 +70,52 @@ namespace Game.Cube
            
             // TODO: get world pos of start. check if in cube. rotate slice in direction
             // TODO LATER: refactor this out to a different class. The cube doesn't need to listen itself does it?
-            var camera = IoC.Resolve<Camera>();
+            var camera = Camera.main;
             var ray = camera.ScreenPointToRay(drag.StartPosition);
 
             if (!Physics.Raycast(ray, out var hit)) return;
             
             var piece = pieces.First(p => p.Is(hit.transform.gameObject));
             
-            var face = InverseTransformPoint(hit.point);//.ToIntegerAxis();
+            var face = InverseTransformPoint(hit.point);
             
             var direction = InverseTransformDirection(camera.transform.TransformDirection(drag.Direction)).ToIntegerAxis();
             
-            var axis = Vector3.Cross(face, direction);//.ToIntegerAxis();
+            var axis = Vector3.Cross(face, direction).ToIntegerAxis();
             
-            logger.Info("Direction: {1}, Axis: {2}", direction, axis);
+            logger.Info("Direction: {0}, Axis: {1}", direction, axis);
 
-            var spinAxis = axis.ToIntegerAxis();
-            if (spinAxis.y != 0)
+            RotateSliceCommand cmd = null;
+
+            if (axis.y != 0)
             {
                 var sign = Math.Sign(direction.x);
                 if (sign == 0) 
                     sign = Math.Sign(direction.z);
                 
-                messengerHub.Publish(new DebugStartCoroutine(this,
-                    FindYAxisSlice(piece.Position).Rotate90Degrees(sign > 0)));
+                // We flip the comparison on this one because of the positive direction on Z in unity.
+                cmd = new RotateSliceCommand(FindYAxisSlice(piece.Position), sign > 0);
                 
-            } else if (spinAxis.x != 0)
+            } else if (axis.x != 0)
             {
                 var sign = Math.Sign(direction.y);
                 if (sign == 0) 
                     sign = Math.Sign(direction.z);
                 
-                messengerHub.Publish(new DebugStartCoroutine(this,
-                    FindXAxisSlice(piece.Position).Rotate90Degrees(sign < 0)));
+                cmd =  new RotateSliceCommand(FindXAxisSlice(piece.Position), sign < 0);
                 
-            } else if (spinAxis.z != 0)
+            } else if (axis.z != 0)
             {
                 var sign = Math.Sign(direction.x);
                 if (sign == 0) 
                     sign = Math.Sign(direction.y);
                 
-                messengerHub.Publish(new DebugStartCoroutine(this,
-                    FindZAxisSlice(piece.Position).Rotate90Degrees(sign < 0)));
+                cmd = new RotateSliceCommand(FindZAxisSlice(piece.Position), sign < 0);
                 
             }
             
-            UnityEngine.Debug.DrawRay(this.WorldPosition, spinAxis * 10, Color.green, 10f, false);
+            if (cmd != null)
+                messengerHub.Publish(new EnqueueCommand(this, cmd));
         }
 
         protected override void OnDispose()

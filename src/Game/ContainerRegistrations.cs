@@ -1,4 +1,5 @@
 using System;
+using Core.Command;
 using Core.IoC;
 using Game.Cube.Stickers;
 using Game.Logging;
@@ -10,6 +11,13 @@ namespace Game
 {
     public class ContainerRegistrations : ContainerRegistrationsBase
     {
+        private readonly ICommandExecutor commandExecutor;
+
+        public ContainerRegistrations(ICommandExecutor commandExecutor)
+        {
+            this.commandExecutor = commandExecutor;
+        }
+
         public override void RegisterAll(Container container)
         {
             Singleton<ILogger, UnityConsoleLogger>(container);
@@ -21,7 +29,7 @@ namespace Game
             else
                 throw new NotImplementedException();
             
-            container.RegisterInstance(Camera.main);
+            container.RegisterInstance(commandExecutor);
         }
     }
 }
