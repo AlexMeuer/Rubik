@@ -1,23 +1,24 @@
 using Core.Logging;
 using Core.State;
 using Core.TinyMessenger;
+using Game.Cube;
 
 namespace Game.GameState.States
 {
-    public class SolvedState : GameStateBase
+    public class SolvedState : CubeGameStateBase
     {
-        public SolvedState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger) : base(context, messengerHub, logger)
+        public SolvedState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, IRubiksCube rubiksCube) : base(context, messengerHub, logger, rubiksCube)
         {
         }
 
         protected override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         protected override void OnExit()
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

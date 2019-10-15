@@ -30,7 +30,7 @@ namespace Game.GameState.States
         {
             if (message.Command is RotateSliceCommand)
             {
-                Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube));
+                Context.TransitionTo(new CheckingSolvedState(Context, MessengerHub, Logger, RubiksCube));
             }
         }
     }

@@ -70,6 +70,7 @@
     <Compile Include="Extensions\Vector3Extensions.cs" />
     <Compile Include="GameObjectEnableDisableToggler.cs" />
     <Compile Include="GameState\GameStateController.cs" />
+    <Compile Include="GameState\States\CheckingSolvedState.cs" />
     <Compile Include="GameState\States\CubeGameStateBase.cs" />
     <Compile Include="GameState\States\EndMenuState.cs" />
     <Compile Include="GameState\States\ExecutingUserMoveState.cs" />

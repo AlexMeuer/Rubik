@@ -12,6 +12,7 @@ namespace Game
         {
             Initialise();
             
+            // A quick and dirty way of turning the single directional light on and off.
             lightToggler = new GameObjectEnableDisableToggler<TurnLightsOnOffMessage>(messengerHub,
                                                                                       GameObject.FindWithTag("MainLight"),
                                                                                       (m) => m.TurnOn);
