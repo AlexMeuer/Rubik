@@ -1,3 +1,4 @@
+using Core.State;
 using Core.TinyMessenger;
 using Game.Messages;
 using UnityEngine;
@@ -9,17 +10,17 @@ namespace Game.Camera.State
     {
         private TinyMessageSubscriptionToken subscriptionToken;
         
-        public WaitingForDragState(StateContext context, ITinyMessengerHub messengerHub, UnityEngine.Camera camera, ILogger logger)
-            : base(context, messengerHub, camera, logger)
+        public WaitingForDragState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, UnityEngine.Camera camera)
+            : base(context, messengerHub, logger, camera)
         {
         }
 
-        public override void Enter()
+        protected override void OnEnter()
         {
             subscriptionToken = MessengerHub.Subscribe<MouseDownMessage>(OnMouseDown);
         }
 
-        public override void Exit()
+        protected override void OnExit()
         {
             subscriptionToken.Dispose();
         }
@@ -32,7 +33,7 @@ namespace Game.Camera.State
             if (Physics.Raycast(ray, out var hit))
                 return;
             
-            Context.TransitionTo(new DraggingState(Context, MessengerHub, Camera, Logger));
+            Context.TransitionTo(new DraggingState(Context, MessengerHub, Logger, Camera));
         }
     }
 }

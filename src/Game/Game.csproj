@@ -48,9 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera\CameraController.cs" />
+    <Compile Include="Camera\State\CameraControllerStateBase.cs" />
+    <Compile Include="Camera\State\DisabledState.cs" />
     <Compile Include="Camera\State\DraggingState.cs" />
-    <Compile Include="Camera\State\IState.cs" />
-    <Compile Include="Camera\State\StateContext.cs" />
     <Compile Include="Camera\State\WaitingForDragState.cs" />
     <Compile Include="Command\RotateSliceCommand.cs" />
     <Compile Include="ContainerRegistrations.cs" />
@@ -67,9 +67,11 @@
     <Compile Include="Extensions\Vector3Extensions.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="Logging\UnityConsoleLogger.cs" />
+    <Compile Include="Messages\DisableCameraControlMessage.cs" />
     <Compile Include="Messages\DragEndMessage.cs" />
     <Compile Include="Messages\DragMessageBase.cs" />
     <Compile Include="Messages\DragProgressMessage.cs" />
+    <Compile Include="Messages\EnableCameraControlMessage.cs" />
     <Compile Include="Messages\MouseDownMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

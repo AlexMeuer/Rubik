@@ -1,3 +1,4 @@
+using Core.State;
 using Core.TinyMessenger;
 using Game.Messages;
 using UnityEngine;
@@ -10,18 +11,18 @@ namespace Game.Camera.State
         private TinyMessageSubscriptionToken dragProgressSubscriptionToken;
         private TinyMessageSubscriptionToken dragEndSubscriptionToken;
         
-        public DraggingState(StateContext context, ITinyMessengerHub messengerHub, UnityEngine.Camera camera, ILogger logger)
-            : base(context, messengerHub, camera, logger)
+        public DraggingState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, UnityEngine.Camera camera)
+            : base(context, messengerHub, logger, camera)
         {
         }
 
-        public override void Enter()
+        protected override void OnEnter()
         {
             dragProgressSubscriptionToken = MessengerHub.Subscribe<DragProgressMessage>(OnDragProgress);
             dragEndSubscriptionToken = MessengerHub.Subscribe<DragEndMessage>(OnDragEnd);
         }
 
-        public override void Exit()
+        protected override void OnExit()
         {
             dragProgressSubscriptionToken.Dispose();
             dragEndSubscriptionToken.Dispose();
@@ -40,7 +41,7 @@ namespace Game.Camera.State
 
         private void OnDragEnd(DragEndMessage message)
         {
-            Context.TransitionTo(new WaitingForDragState(Context, MessengerHub, Camera, Logger));
+            Context.TransitionTo(new WaitingForDragState(Context, MessengerHub, Logger, Camera));
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using Core.Logging;
 
-namespace Game.Camera.State
+namespace Core.State
 {
     public class StateContext : IDisposable
     {
@@ -16,11 +16,27 @@ namespace Game.Camera.State
 
         public void TransitionTo(IState nextState)
         {
-            logger.Info("Transitioning to: {0}", nextState.GetType().Name);
+            logger.Info("Transitioning to {0}", nextState.GetType().Name);
             
             state?.Exit();
 
             state = nextState;
+            
+            state.Enter();
+        }
+
+        public void Disable()
+        {
+            if (state == null || state.IsActive)
+                return;
+            
+            state.Exit();
+        }
+
+        public void Enable()
+        {
+            if (state == null || !state.IsActive)
+                return;
             
             state.Enter();
         }
