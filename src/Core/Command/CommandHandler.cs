@@ -13,8 +13,8 @@ namespace Core.Command
         private readonly TinyMessageSubscriptionToken subscriptionToken;
         private readonly ILogger logger;
         private readonly ICommandExecutor executor;
-        private readonly Stack<IInvokableCommand> executedCommands;
-        private readonly Stack<IInvokableCommand> undoneCommands;
+        private readonly Stack<IUndoableCommand> commandHistory;
+        private readonly Stack<IUndoableCommand> undoHistory;
 
         public CommandHandler(ITinyMessengerHub messengerHub, ILogger logger, ICommandExecutor executor)
         {
@@ -22,14 +22,14 @@ namespace Core.Command
             this.messengerHub = messengerHub;
             this.executor = executor;
             
-            executedCommands = new Stack<IInvokableCommand>();
-            undoneCommands = new Stack<IInvokableCommand>();
+            commandHistory = new Stack<IUndoableCommand>();
+            undoHistory = new Stack<IUndoableCommand>();
             
             subscriptionToken = messengerHub.Subscribe<EnqueueCommandMessage>(HandleEnqueueMessage);
         }
 
-        public bool CanUndo => executedCommands.Count > 0;
-        public bool CanRedo => undoneCommands.Count > 0;
+        public bool CanUndo => commandHistory.Count > 0;
+        public bool CanRedo => undoHistory.Count > 0;
         
         public void UndoLast()
         {
@@ -39,9 +39,9 @@ namespace Core.Command
                 return;
             }
 
-            var cmd = executedCommands.Pop();
+            var cmd = commandHistory.Pop();
             
-            undoneCommands.Push(cmd);
+            undoHistory.Push(cmd);
             
             logger.Info("Undoing command: {0}", cmd.GetType().Name);
             
@@ -56,9 +56,9 @@ namespace Core.Command
                 return;
             }
 
-            var cmd = undoneCommands.Pop();
+            var cmd = undoHistory.Pop();
             
-            executedCommands.Push(cmd);
+            commandHistory.Push(cmd);
             
             logger.Info("Redoing command: {0}", cmd.GetType().Name);
             
@@ -72,17 +72,17 @@ namespace Core.Command
 
         private void HandleEnqueueMessage(EnqueueCommandMessage message)
         {
-            var cmd = message.InvokableCommand;
+            var cmd = message.ExecutableCommand;
 
-            if (message.Transient)
+            if (!message.Transient && message.Command is IUndoableCommand undoableCommand)
             {
-                logger.Info("Executing transient command: {0}", cmd.GetType().Name);
+                logger.Info("Executing undoable command: {0}", cmd.GetType().Name);
+
+                commandHistory.Push(undoableCommand);
             }
-            else
+            else if (message.Transient)
             {
-                logger.Info("Executing fresh command: {0}", cmd.GetType().Name);
-
-                executedCommands.Push(cmd);
+                logger.Info("Executing command: {0}", cmd.GetType().Name);
             }
 
             executor.HandleExecution(PublishMessageWhenFinished(cmd.Execute(), cmd));

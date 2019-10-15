@@ -8,6 +8,8 @@ namespace Core.State
         private readonly ILogger logger;
         private IState state;
 
+        public bool IsDisabled => state == null || !state.IsActive;
+
         public StateContext(ILogger logger)
         {
             this.logger = logger;
@@ -27,7 +29,7 @@ namespace Core.State
 
         public void Disable()
         {
-            if (state == null || state.IsActive)
+            if (IsDisabled)
                 return;
             
             state.Exit();
@@ -35,7 +37,7 @@ namespace Core.State
 
         public void Enable()
         {
-            if (state == null || !state.IsActive)
+            if (!IsDisabled)
                 return;
             
             state.Enter();

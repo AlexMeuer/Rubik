@@ -44,6 +44,8 @@ namespace Game.GameState.States
             commandFinishedSubscriptionToken = MessengerHub.Subscribe<CommandCompleteMessage>(OnCommandFinished);
             
             MessengerHub.Publish(new TurnLightsOnOffMessage(this, turnOn: false));
+            
+            MessengerHub.Publish(new EnableCameraControlMessage(this));
 
             RotateRandomSlice();
         }

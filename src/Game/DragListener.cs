@@ -11,7 +11,6 @@ namespace Game
     
     public class MouseDragListener : IDragListener
     {
-        private const float UpdateTolerance = 5f;
         private readonly ITinyMessengerHub messengerHub;
         private Vector3 startPosition;
         private Vector3 lastUpdatePosition;
@@ -38,7 +37,7 @@ namespace Game
                 
                 messengerHub.Publish(new DragEndMessage(this, startPosition, Input.mousePosition));
             }
-            else if (mouseIsDown && (Input.mousePosition - lastUpdatePosition).magnitude > UpdateTolerance)
+            else if (mouseIsDown)
             {
                 messengerHub.Publish(new DragProgressMessage(this, lastUpdatePosition, Input.mousePosition));
                 

@@ -34,14 +34,17 @@ namespace Game.Camera
                                         messengerHub,
                                         this.logger,
                                         camera));
+            
+            context.Disable();
 
             spinSubscriptionToken = messengerHub.Subscribe<SpinCamera360Message>(OnSpinRequested);
 
-            enableDisableSubscriptionToken = messengerHub.Subscribe<DisableCameraControlMessage>(DisableControl);
+            enableDisableSubscriptionToken = messengerHub.Subscribe<EnableCameraControlMessage>(EnableControl);
         }
         public void Dispose()
         {
             context.Dispose();
+            spinSubscriptionToken.Dispose();
         }
 
         private void OnSpinRequested(SpinCamera360Message message)
@@ -58,6 +61,9 @@ namespace Game.Camera
 
         private void DisableControl(DisableCameraControlMessage message)
         {
+            if (context.IsDisabled)
+                return;
+            
             context.Disable();
             
             messengerHub.Unsubscribe<DisableCameraControlMessage>(enableDisableSubscriptionToken);
@@ -69,6 +75,9 @@ namespace Game.Camera
 
         private void EnableControl(EnableCameraControlMessage message)
         {
+            if (!context.IsDisabled)
+                return;
+            
             context.Enable();
             
             messengerHub.Unsubscribe<DisableCameraControlMessage>(enableDisableSubscriptionToken);

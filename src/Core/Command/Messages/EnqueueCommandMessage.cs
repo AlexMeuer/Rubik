@@ -5,22 +5,23 @@ namespace Core.Command.Messages
 {
     public class EnqueueCommandMessage : TinyMessageBase
     {
-        public ICommand Command => InvokableCommand;
+        public ICommand Command => ExecutableCommand;
         
-        internal IInvokableCommand InvokableCommand { get; }
+        internal IExecutableCommand ExecutableCommand { get; }
         
         /// <summary>
         /// If true, this command should not be added to the history.
         /// </summary>
         internal bool Transient { get; }
         
-        public EnqueueCommandMessage(object sender, IInvokableCommand command, bool transient = false) : base(sender)
+        public EnqueueCommandMessage(object sender, IExecutableCommand command, bool transient = false) : base(sender)
         {
 #if DEBUG
             // ReSharper disable once JoinNullCheckWithUsage
             if (command == null) throw new ArgumentNullException(nameof(command));
 #endif
-            InvokableCommand = command;
+            ExecutableCommand = command;
+            Transient = transient;
         }
     }
 }

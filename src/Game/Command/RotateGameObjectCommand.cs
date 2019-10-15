@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Command
 {
-    public class RotateGameObjectCommand : IInvokableCommand
+    public class RotateGameObjectCommand : IExecutableCommand
     {
         private readonly Transform transform;
         private readonly Vector3 point;
@@ -31,11 +31,6 @@ namespace Game.Command
                 
                 yield return new WaitForSeconds(waitTime);
             }
-        }
-
-        public IEnumerator Undo()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

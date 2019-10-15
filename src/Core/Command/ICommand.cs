@@ -9,9 +9,13 @@ namespace Core.Command
         // type of the command without allowing them to execute or undo the command.
     }
     
-    public interface IInvokableCommand : ICommand
+    public interface IExecutableCommand : ICommand
     {
         IEnumerator Execute();
+    }
+
+    public interface IUndoableCommand : IExecutableCommand
+    {
         IEnumerator Undo();
     }
 }

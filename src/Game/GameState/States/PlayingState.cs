@@ -1,5 +1,6 @@
 using Core.Command.Messages;
 using Core.Logging;
+using Core.Messages;
 using Core.State;
 using Core.TinyMessenger;
 using Game.Command;
@@ -23,6 +24,8 @@ namespace Game.GameState.States
             rotateCommandSubscriptionToken = MessengerHub.Subscribe<EnqueueCommandMessage>(OnEnqueueCommand);
 
             dragEndSubscriptionToken = MessengerHub.Subscribe<DragEndMessage>(RubiksCube.AcceptDragInput);
+            
+            MessengerHub.Publish(new EnableCameraControlMessage(this));
         }
 
         protected override void OnExit()

@@ -28,6 +28,7 @@ namespace Game.Cube
     
     public class RubiksCube : Instance, IRubiksCube
     {
+        private const float MinimumDragDistance = 30f;
         private const float PositionMatchingTolerance = 0.51f;
         
         private readonly ILogger logger;
@@ -47,9 +48,8 @@ namespace Game.Cube
 
         public void AcceptDragInput(DragEndMessage drag)
         {
-            //    D    R    A    F    T    \\
-           
-            // TODO: refactor this out to a different class. The cube doesn't need to listen itself does it?
+            if (drag.Length < MinimumDragDistance)
+                return;
             
             var camera = IoC.Resolve<UnityEngine.Camera>(); // TODO: Remove use of IoC in methods
             var ray = camera.ScreenPointToRay(drag.StartPosition);
