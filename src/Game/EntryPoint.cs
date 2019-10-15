@@ -5,7 +5,6 @@ using Core.IoC;
 using Core.TinyMessenger;
 using Game.Cube;
 using Game.Cube.Stickers;
-using UnityEngine;
 using ILogger = Core.Logging.ILogger;
 
 namespace Game

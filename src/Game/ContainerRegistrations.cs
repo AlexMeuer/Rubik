@@ -23,13 +23,10 @@ namespace Game
         {
             Singleton<ILogger, UnityConsoleLogger>(container);
             Singleton<CameraController, CameraController>(container);
+            Singleton<IDragListener, MouseDragListener>(container);
+            
             Transient<IStickerDataFactory, StickerDataFactory>(container);
             Transient<IStickerFactory, StickerFactory>(container);
-            
-            if (Application.isEditor)
-                Singleton<IDragListener, MouseDragListener>(container);
-            else
-                throw new NotImplementedException();
             
             container.RegisterInstance(commandExecutor);
             

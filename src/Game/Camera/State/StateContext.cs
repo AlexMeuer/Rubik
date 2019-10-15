@@ -1,5 +1,4 @@
 using System;
-using Core.IoC;
 using Core.Logging;
 
 namespace Game.Camera.State
