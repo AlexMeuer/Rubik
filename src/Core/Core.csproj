@@ -53,6 +53,7 @@
     <Compile Include="Command\ICommandExecutor.cs" />
     <Compile Include="Command\ICommandHandler.cs" />
     <Compile Include="ContainerRegistrations.cs" />
+    <Compile Include="Extensions\FloatExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IoC\ContainerRegistrationsBase.cs" />
     <Compile Include="IoC\IContainerRegistrations.cs" />

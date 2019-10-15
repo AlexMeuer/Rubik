@@ -47,6 +47,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Camera\CameraController.cs" />
+    <Compile Include="Camera\State\DraggingState.cs" />
+    <Compile Include="Camera\State\IState.cs" />
+    <Compile Include="Camera\State\StateContext.cs" />
+    <Compile Include="Camera\State\WaitingForDragState.cs" />
     <Compile Include="Command\RotateSliceCommand.cs" />
     <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="Cube\Piece.cs" />
@@ -59,7 +64,6 @@
     <Compile Include="EntryPoint.cs" />
     <Compile Include="EntryPoint_Unity.cs" />
     <Compile Include="Extensions\FaceColorExtensions.cs" />
-    <Compile Include="Extensions\FloatExtensions.cs" />
     <Compile Include="Extensions\Vector3Extensions.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="Logging\UnityConsoleLogger.cs" />

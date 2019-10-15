@@ -29,22 +29,6 @@ namespace Game
             dragListener = IoC.Resolve<IDragListener>();
 
             cube = new RubiksCube(cubesPerRow, IoC.Resolve<ILogger>(),  messengerHub, IoC.Resolve<IStickerDataFactory>(), IoC.Resolve<IStickerFactory>());
-
-            StartCoroutine(Demo());
-        }
-
-        private IEnumerator Demo()
-        {
-            yield return new WaitForSeconds(3f);
-
-            var handler = IoC.Resolve<ICommandHandler>();
-            
-            for (;;)
-            {
-                handler.UndoLast();
-                
-                yield return new WaitForSeconds(5f);
-            }
         }
 
         public void HandleExecution(Func<IEnumerator> execution)

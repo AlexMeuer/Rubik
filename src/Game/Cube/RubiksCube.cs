@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Command;
+using Core.Extensions;
+using Core.IoC;
 using Core.TinyMessenger;
 using Game.Command;
 using Game.Cube.Stickers;
@@ -67,9 +69,9 @@ namespace Game.Cube
         {
             //    D    R    A    F    T    \\
            
-            // TODO: get world pos of start. check if in cube. rotate slice in direction
-            // TODO LATER: refactor this out to a different class. The cube doesn't need to listen itself does it?
-            var camera = Camera.main;
+            // TODO: refactor this out to a different class. The cube doesn't need to listen itself does it?
+            
+            var camera = IoC.Resolve<UnityEngine.Camera>(); // TODO: Remove use of IoC in methods
             var ray = camera.ScreenPointToRay(drag.StartPosition);
 
             if (!Physics.Raycast(ray, out var hit)) return;

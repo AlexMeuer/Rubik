@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Extensions
+namespace Core.Extensions
 {
     public static class FloatExtensions
     {

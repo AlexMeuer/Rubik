@@ -40,9 +40,9 @@ namespace Game
             }
             else if (mouseIsDown && (Input.mousePosition - lastUpdatePosition).magnitude > UpdateTolerance)
             {
-                lastUpdatePosition = Input.mousePosition;
+                messengerHub.Publish(new DragProgressMessage(this, lastUpdatePosition, Input.mousePosition));
                 
-                messengerHub.Publish(new DragProgressMessage(this, startPosition, Input.mousePosition));
+                lastUpdatePosition = Input.mousePosition;
             }
         }
     }
