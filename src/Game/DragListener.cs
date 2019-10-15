@@ -1,8 +1,6 @@
-using Core.IoC;
 using Core.TinyMessenger;
 using Game.Messages;
 using UnityEngine;
-using ILogger = Core.Logging.ILogger;
 
 namespace Game
 {

@@ -5,7 +5,6 @@ using Core.IoC;
 using Core.TinyMessenger;
 using Game.Cube;
 using Game.Cube.Stickers;
-using Game.Messages;
 using UnityEngine;
 using ILogger = Core.Logging.ILogger;
 
@@ -17,7 +16,6 @@ namespace Game
         public RubiksCube cube;
         private ITinyMessengerHub messengerHub;
         private IDragListener dragListener;
-        private TinyMessageSubscriptionToken debugStartCoroutineSubscriptionToken;
         
         private void Initialise()
         {
@@ -30,10 +28,8 @@ namespace Game
             
             dragListener = IoC.Resolve<IDragListener>();
 
-            cube = new RubiksCube(cubesPerRow,IoC.Resolve<ILogger>(),  messengerHub, IoC.Resolve<IStickerDataFactory>(), IoC.Resolve<IStickerFactory>());
+            cube = new RubiksCube(cubesPerRow, IoC.Resolve<ILogger>(),  messengerHub, IoC.Resolve<IStickerDataFactory>(), IoC.Resolve<IStickerFactory>());
 
-            debugStartCoroutineSubscriptionToken =
-                messengerHub.Subscribe<DebugStartCoroutine>(dscr => StartCoroutine(dscr.Coroutine));
             StartCoroutine(Demo());
         }
 
