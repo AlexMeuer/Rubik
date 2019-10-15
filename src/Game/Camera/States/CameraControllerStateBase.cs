@@ -2,7 +2,7 @@ using Core.Logging;
 using Core.State;
 using Core.TinyMessenger;
 
-namespace Game.Camera.State
+namespace Game.Camera.States
 {
     public abstract class CameraControllerStateBase : StateBase
     {

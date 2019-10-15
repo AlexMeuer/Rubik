@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
 using Core.Command;
 using Core.IoC;
 using Core.TinyMessenger;
 using Game.Cube;
-using Game.Cube.Stickers;
-using ILogger = Core.Logging.ILogger;
 
 namespace Game
 {
@@ -26,13 +23,11 @@ namespace Game
             messengerHub = IoC.Resolve<ITinyMessengerHub>();
             
             dragListener = IoC.Resolve<IDragListener>();
-
-            cube = new RubiksCube(cubesPerRow, IoC.Resolve<ILogger>(),  messengerHub, IoC.Resolve<IStickerDataFactory>(), IoC.Resolve<IStickerFactory>());
         }
 
-        public void HandleExecution(Func<IEnumerator> execution)
+        public void HandleExecution(IEnumerator execution)
         {
-            StartCoroutine(execution());
+            StartCoroutine(execution);
         }
     }
 }

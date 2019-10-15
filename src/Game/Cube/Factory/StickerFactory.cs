@@ -4,36 +4,40 @@ using Game.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game.Cube.Stickers
+namespace Game.Cube.Factory
 {
     public interface IStickerFactory
     {
-        IEnumerable<GameObject> Create(StickerData data);
+        IEnumerable<GameObject> Create(StickerData data, GameObject parent);
     }
 
     internal class StickerFactory : IStickerFactory
     {   
-        public IEnumerable<GameObject> Create(StickerData data)
+        public IEnumerable<GameObject> Create(StickerData data, GameObject parent)
         {
+            var parentTransform = parent.transform;
+            
             var stickers = new List<GameObject>();
             
             if (data.X != FaceColor.None)
-                stickers.Add(Create(Vector3.right,   data.Directions.x, data.X));
+                stickers.Add(Create(Vector3.right,   data.Directions.x, data.X, parentTransform));
             
             if (data.Y != FaceColor.None)
-                stickers.Add(Create(Vector3.up,      data.Directions.y, data.Y));
+                stickers.Add(Create(Vector3.up,      data.Directions.y, data.Y, parentTransform));
             
             if (data.Z != FaceColor.None)
-                stickers.Add(Create(Vector3.forward, data.Directions.z, data.Z));
+                stickers.Add(Create(Vector3.forward, data.Directions.z, data.Z, parentTransform));
 
             return stickers;
         }
 
-        private static GameObject Create(Vector3 direction, int multiplier, FaceColor faceColor)
+        private static GameObject Create(Vector3 direction, int multiplier, FaceColor faceColor, Transform parent)
         {
             var sticker = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
             sticker.name = faceColor.ToString();
+            
+            sticker.transform.SetParent(parent);
             
             Object.Destroy(sticker.GetComponent<BoxCollider>());
             

@@ -1,5 +1,4 @@
 using Core.Extensions;
-using Game.Cube.Stickers;
 using UnityEngine;
 
 namespace Game.Cube
@@ -20,17 +19,12 @@ namespace Game.Cube
 
         private static string DebugName(StickerData sd) => "{0} {1}".Format(nameof(Piece), sd.Directions);
 
-        public Piece(StickerData stickerData, IStickerFactory stickerFactory, GameObject parent = null)
+        public Piece(StickerData stickerData, GameObject parent = null)
             : base(DebugName(stickerData), GameObject.CreatePrimitive(PrimitiveType.Cube), parent)
         {
             this.stickerData = stickerData;
 
             Self.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f);
-            
-            foreach (var sticker in stickerFactory.Create(stickerData))
-            {
-                SetAsChild(sticker);
-            }
         }
 
         public void ApplyXRotationToData(bool reverse)

@@ -1,6 +1,6 @@
 using Core.TinyMessenger;
 
-namespace Game.Messages
+namespace Core.Messages
 {
     public class DisableCameraControlMessage : TinyMessageBase
     {

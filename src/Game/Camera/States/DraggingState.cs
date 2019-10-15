@@ -4,7 +4,7 @@ using Game.Messages;
 using UnityEngine;
 using ILogger = Core.Logging.ILogger;
 
-namespace Game.Camera.State
+namespace Game.Camera.States
 {
     public class DraggingState : CameraControllerStateBase
     {

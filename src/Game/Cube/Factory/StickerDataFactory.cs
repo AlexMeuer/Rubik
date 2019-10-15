@@ -1,7 +1,7 @@
 using Domain;
 using UnityEngine;
 
-namespace Game.Cube.Stickers
+namespace Game.Cube.Factory
 {
     public interface IStickerDataFactory
     {

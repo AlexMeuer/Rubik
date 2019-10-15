@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Command;
+using Core.Command.Messages;
 using Core.Extensions;
 using Core.IoC;
 using Core.TinyMessenger;
 using Game.Command;
-using Game.Cube.Stickers;
 using Game.Extensions;
 using Game.Messages;
 using UnityEngine;
@@ -16,56 +15,37 @@ namespace Game.Cube
 {
     public interface IRubiksCube : IInstance
     {
+        int PiecesPerRow { get; }
+        
         Slice FindXAxisSlice(Vector3 localPosition);
         Slice FindYAxisSlice(Vector3 localPosition);
         Slice FindZAxisSlice(Vector3 localPosition);
+
+        void AcceptDragInput(DragEndMessage message);
+
+        IEnumerable<StickerData> GetStickerData();
     }
     
     public class RubiksCube : Instance, IRubiksCube
     {
+        private const float PositionMatchingTolerance = 0.51f;
+        
         private readonly ILogger logger;
         private readonly ITinyMessengerHub messengerHub;
-        private readonly List<IPiece> pieces;
-        private readonly TinyMessageSubscriptionToken dragEndSubscriptionToken;
+        private readonly IEnumerable<IPiece> pieces;
 
-        // TODO: Refactor so that only 1 factory is required in the ctor.
-        public RubiksCube(int cubesPerRow, ILogger logger, ITinyMessengerHub messengerHub, IStickerDataFactory stickerDataFactory, IStickerFactory stickerFactory,
-            GameObject parent = null) : base(nameof(RubiksCube), parent)
+        public int PiecesPerRow { get; }
+
+        public RubiksCube(GameObject gameObject, IEnumerable<IPiece> pieces, int piecesPerRow, ILogger logger, ITinyMessengerHub messengerHub)
+            : base(nameof(RubiksCube), gameObject, null)
         {
+            this.pieces = pieces;
             this.logger = logger;
             this.messengerHub = messengerHub;
-            pieces = new List<IPiece>(cubesPerRow * cubesPerRow * cubesPerRow);
-
-            // We want to center all the pieces around (0,0,0).
-            var offset = 0.5f - cubesPerRow * 0.5f;
-
-            for (var z = 0; z < cubesPerRow; ++z)
-            {
-                for (var y = 0; y < cubesPerRow; ++y)
-                {
-                    for (var x = 0; x < cubesPerRow; ++x)
-                    {
-                        // Map the x,y,z vector from {0..cubesPerRow} into the range {-1..1}
-                        // then truncate to integers. This gives us an int vector telling us
-                        // which sides of the cube should have stickers (i.e. be colored).
-                        var stickerDirections = new Vector3(x, y, z)
-                            .Map(0, cubesPerRow - 1, -1, 1)
-                            .Truncate();
-
-                        var piece = new Piece(stickerDataFactory.Create(stickerDirections), stickerFactory, Self)
-                        {
-                            Position = new Vector3(x + offset, y + offset, z + offset),
-                        };
-
-                        pieces.Add(piece);
-                    }
-                }
-            }
-
-            dragEndSubscriptionToken = messengerHub.Subscribe<DragEndMessage>(OnDragEnd);
+            PiecesPerRow = piecesPerRow;
         }
 
-        private void OnDragEnd(DragEndMessage drag)
+        public void AcceptDragInput(DragEndMessage drag)
         {
             //    D    R    A    F    T    \\
            
@@ -84,7 +64,7 @@ namespace Game.Cube
             
             var axis = Vector3.Cross(face, direction).ToIntegerAxis();
             
-            logger.Info("Direction: {0}, Axis: {1}", direction, axis);
+            // logger.Info("Direction: {0}, Axis: {1}", direction, axis);
 
             RotateSliceCommand cmd = null;
 
@@ -116,17 +96,7 @@ namespace Game.Cube
             }
             
             if (cmd != null)
-                messengerHub.Publish(new EnqueueCommand(this, cmd));
-        }
-
-        protected override void OnDispose()
-        {
-            foreach (var piece in pieces)
-            {
-                piece.Dispose();
-            }
-            
-            base.OnDispose();
+                messengerHub.Publish(new EnqueueCommandMessage(this, cmd));
         }
 
         public Slice FindXAxisSlice(Vector3 localPosition)
@@ -154,22 +124,34 @@ namespace Game.Cube
             
         }
 
+        public IEnumerable<StickerData> GetStickerData()
+        {
+            return pieces.Select(p => p.StickerData);
+        }
+
+        protected override void OnDispose()
+        {
+            foreach (var piece in pieces)
+            {
+                piece.Dispose();
+            }
+            
+            base.OnDispose();
+        }
+
         private IEnumerable<IPiece> MatchX(Vector3 localPosition)
         {
-            return pieces.Where(p => p.Position.x.NearlyEqual(localPosition.x, 0.51f));
-            // TODO: 0.51f is a bad magic number. Unreliable.
+            return pieces.Where(p => p.Position.x.NearlyEqual(localPosition.x, PositionMatchingTolerance));
         }
 
         private IEnumerable<IPiece> MatchY(Vector3 localPosition)
         {
-            return pieces.Where(p => p.Position.y.NearlyEqual(localPosition.y, 0.51f));
-            // TODO: 0.51f is a bad magic number. Unreliable.
+            return pieces.Where(p => p.Position.y.NearlyEqual(localPosition.y, PositionMatchingTolerance));
         }
 
         private IEnumerable<IPiece> MatchZ(Vector3 localPosition)
         {
-            return pieces.Where(p => p.Position.z.NearlyEqual(localPosition.z, 0.51f));
-            // TODO: 0.51f is a bad magic number. Unreliable.
+            return pieces.Where(p => p.Position.z.NearlyEqual(localPosition.z, PositionMatchingTolerance));
         }
     }
 }

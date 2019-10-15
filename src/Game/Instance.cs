@@ -9,6 +9,8 @@ namespace Game
         Vector3 Position { get; }
         Vector3 WorldPosition { get; }
         void RotateAbout(Vector3 axis, float angle);
+        Vector3 TransformPoint(Vector3 point);
+        Vector3 TransformDirection(Vector3 direction);
         Vector3 InverseTransformPoint(Vector3 point);
         Vector3 InverseTransformDirection(Vector3 direction);
         bool Is(GameObject other);
@@ -16,6 +18,11 @@ namespace Game
     
     public abstract class Instance : IInstance
     {
+        public static implicit operator GameObject(Instance instance)
+        {
+            return instance.Self;
+        }
+        
         public Vector3 Position
         {
             get => Self.transform.localPosition;
@@ -47,6 +54,16 @@ namespace Game
         public void RotateAbout(Vector3 axis, float angle)
         {
             Self.transform.RotateAround(Vector3.zero, axis, angle);
+        }
+
+        public Vector3 TransformPoint(Vector3 point)
+        {
+            return Self.transform.TransformPoint(point);
+        }
+
+        public Vector3 TransformDirection(Vector3 direction)
+        {
+            return Self.transform.TransformDirection(direction);
         }
 
         public Vector3 InverseTransformPoint(Vector3 point)

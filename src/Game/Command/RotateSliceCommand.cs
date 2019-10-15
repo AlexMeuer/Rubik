@@ -4,7 +4,7 @@ using Game.Cube;
 
 namespace Game.Command
 {
-    public class RotateSliceCommand : ICommand
+    public class RotateSliceCommand : IInvokableCommand
     {
         private readonly Slice slice;
         private readonly bool reverse;

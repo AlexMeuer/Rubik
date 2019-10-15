@@ -1,6 +1,6 @@
 using Core.State;
 
-namespace Game.Camera.State
+namespace Game.Camera.States
 {
     public class DisabledState : IState
     {

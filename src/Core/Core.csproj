@@ -48,10 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\CommandHandler.cs" />
-    <Compile Include="Command\EnqueueCommand.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\ICommandExecutor.cs" />
     <Compile Include="Command\ICommandHandler.cs" />
+    <Compile Include="Command\Messages\CommandCompleteMessage.cs" />
+    <Compile Include="Command\Messages\EnqueueCommandMessage.cs" />
     <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="Extensions\FloatExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -61,6 +62,10 @@
     <Compile Include="JetBrains\Annotations.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\PrefixedLogger.cs" />
+    <Compile Include="Messages\DisableCameraControlMessage.cs" />
+    <Compile Include="Messages\EnableCameraControlMessage.cs" />
+    <Compile Include="Messages\SpinCamera360Message.cs" />
+    <Compile Include="Messages\TurnLightsOnOffMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="State\IState.cs" />
     <Compile Include="State\StateContext.cs" />

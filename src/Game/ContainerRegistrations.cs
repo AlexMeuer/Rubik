@@ -1,11 +1,10 @@
-using System;
 using Core.Command;
 using Core.IoC;
 using Game.Camera;
-using Game.Cube.Stickers;
+using Game.Cube.Factory;
+using Game.GameState;
 using Game.Logging;
 using SimpleInjector;
-using UnityEngine;
 using ILogger = Core.Logging.ILogger;
 
 namespace Game
@@ -24,9 +23,12 @@ namespace Game
             Singleton<ILogger, UnityConsoleLogger>(container);
             Singleton<CameraController, CameraController>(container);
             Singleton<IDragListener, MouseDragListener>(container);
+            Singleton<GameStateController, GameStateController>(container);
             
             Transient<IStickerDataFactory, StickerDataFactory>(container);
             Transient<IStickerFactory, StickerFactory>(container);
+            Transient<IPieceFactory, PieceFactory>(container);
+            Transient<IRubiksCubeFactory, RubiksCubeFactory>(container);
             
             container.RegisterInstance(commandExecutor);
             
