@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
@@ -79,18 +78,14 @@ namespace Game.UI
 
         public override void AnimateOut(Action onComplete = null)
         {
-            title.transform.DOScale(Vector3.zero, animDurationSeconds)
-                .SetEase(Ease.InBounce);;
-            
-            startButton.transform.DOScale(Vector3.zero, animDurationSeconds)
-                .SetEase(Ease.InBounce)
-                .OnComplete(() => onComplete?.Invoke());
+            title.transform.DOScale(Vector3.zero, animDurationSeconds);
 
-            quitButton.transform.DOScale(Vector3.zero, animDurationSeconds)
-                .SetEase(Ease.InBounce);
+            startButton.transform.DOScale(Vector3.zero, animDurationSeconds);
+
+            quitButton.transform.DOScale(Vector3.zero, animDurationSeconds);
             
             cubeSizeSlider.transform.DOScale(Vector3.zero, animDurationSeconds)
-                .SetEase(Ease.InBounce);
+                .OnComplete(() => onComplete?.Invoke());;
         }
 
         public override void Dispose()

@@ -1,9 +1,7 @@
-using System.Collections;
-using Core.Command;
-using Core.Command.Messages;
+using Core.IoC;
+using Core.Lighting;
 using Core.State;
 using Core.TinyMessenger;
-using DG.Tweening;
 using Game.Cube.Factory;
 using Game.UI;
 using UnityEngine;
@@ -40,7 +38,7 @@ namespace Game.GameState.States
         {
             var rubiksCube = rubiksCubeFactory.Create(screen.SelectedCubeSize);
 
-            var state = new ScramblingState(Context, MessengerHub, Logger, rubiksCube);
+            var state = new ScramblingState(Context, MessengerHub, Logger, rubiksCube, IoC.Resolve<ILightLevelController>());
 
             Context.TransitionTo(state);
         }

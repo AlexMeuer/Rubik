@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.Command.Messages;
+using Core.Lighting;
 using Core.Messages;
 using Core.State;
 using Core.TinyMessenger;
@@ -14,21 +15,24 @@ namespace Game.GameState.States
     public class ScramblingState : CubeGameStateBase
     {
         private delegate Slice SliceFinder(Vector3 position);
-        
-        private const int RandomMoveCountMin = 20;
-        private const int RandomMoveCountMax = 30;
 
+        private const int RandomMoveCountMin = 10;
+        private const int RandomMoveCountMax = 20;
+
+        private readonly ILightLevelController lightLevelController;
         private readonly float randomPointVariance;
         private readonly IReadOnlyList<SliceFinder> sliceFinders;
-        
+
         private int remainingRandomMoveCount;
         private TinyMessageSubscriptionToken commandFinishedSubscriptionToken;
 
-        public ScramblingState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, IRubiksCube cube)
-            : base(context, messengerHub, logger, cube)
+        public ScramblingState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, IRubiksCube cube,
+            ILightLevelController lightLevelController) : base(context, messengerHub, logger, cube)
         {
+            this.lightLevelController = lightLevelController;
+
             randomPointVariance = RubiksCube.PiecesPerRow * 0.5f;
-            
+
             sliceFinders = new List<SliceFinder>(3)
             {
                 RubiksCube.FindXAxisSlice,
@@ -42,10 +46,10 @@ namespace Game.GameState.States
             remainingRandomMoveCount = Random.Range(RandomMoveCountMin, RandomMoveCountMax);
 
             commandFinishedSubscriptionToken = MessengerHub.Subscribe<CommandCompleteMessage>(OnCommandFinished);
-            
-            MessengerHub.Publish(new TurnLightsOnOffMessage(this, turnOn: false));
-            
+
             MessengerHub.Publish(new EnableCameraControlMessage(this));
+
+            lightLevelController.TurnOff(delay: 1f);
 
             RotateRandomSlice();
         }
@@ -53,8 +57,8 @@ namespace Game.GameState.States
         protected override void OnExit()
         {
             MessengerHub.Unsubscribe<CommandCompleteMessage>(commandFinishedSubscriptionToken);
-            
-            MessengerHub.Publish(new TurnLightsOnOffMessage(this, turnOn: true));
+
+            lightLevelController.TurnOn();
         }
 
         private void OnCommandFinished(CommandCompleteMessage message)
@@ -79,14 +83,15 @@ namespace Game.GameState.States
 
         private void RotateRandomSlice()
         {
-            var position = Random.rotationUniform * Vector3.right * Random.Range(-randomPointVariance, randomPointVariance);
+            var position = Random.rotationUniform * Vector3.right *
+                           Random.Range(-randomPointVariance, randomPointVariance);
 
             var axis = Random.Range(0, sliceFinders.Count - 1);
 
             var slice = sliceFinders[axis](position);
-            
+
             var command = new RotateSliceCommand(slice, Random.value > 0.5f);
-            
+
             MessengerHub.Publish(new EnqueueCommandMessage(this, command, transient: true));
         }
     }

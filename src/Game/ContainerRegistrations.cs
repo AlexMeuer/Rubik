@@ -1,8 +1,10 @@
 using Core.Command;
 using Core.IoC;
+using Core.Lighting;
 using Game.Camera;
 using Game.Cube.Factory;
 using Game.GameState;
+using Game.Lighting;
 using Game.Logging;
 using SimpleInjector;
 using ILogger = Core.Logging.ILogger;
@@ -24,6 +26,7 @@ namespace Game
             Singleton<CameraController, CameraController>(container);
             Singleton<IDragListener, MouseDragListener>(container);
             Singleton<GameStateController, GameStateController>(container);
+            Singleton<ILightLevelController, UnityLightLevelController>(container);
             
             Transient<IStickerDataFactory, StickerDataFactory>(container);
             Transient<IStickerFactory, StickerFactory>(container);

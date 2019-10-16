@@ -60,12 +60,12 @@
     <Compile Include="IoC\IContainerRegistrations.cs" />
     <Compile Include="IoC\IoC.cs" />
     <Compile Include="JetBrains\Annotations.cs" />
+    <Compile Include="Lighting\ILightLevelController.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\PrefixedLogger.cs" />
     <Compile Include="Messages\DisableCameraControlMessage.cs" />
     <Compile Include="Messages\EnableCameraControlMessage.cs" />
     <Compile Include="Messages\SpinCamera360Message.cs" />
-    <Compile Include="Messages\TurnLightsOnOffMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="State\IState.cs" />
     <Compile Include="State\StateContext.cs" />

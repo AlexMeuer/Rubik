@@ -74,7 +74,6 @@
     <Compile Include="EntryPoint_Unity.cs" />
     <Compile Include="Extensions\FaceColorExtensions.cs" />
     <Compile Include="Extensions\Vector3Extensions.cs" />
-    <Compile Include="GameObjectEnableDisableToggler.cs" />
     <Compile Include="GameState\GameStateController.cs" />
     <Compile Include="GameState\States\CheckingSolvedState.cs" />
     <Compile Include="GameState\States\CubeGameStateBase.cs" />
@@ -87,6 +86,7 @@
     <Compile Include="GameState\States\ScramblingState.cs" />
     <Compile Include="GameState\States\SolvedState.cs" />
     <Compile Include="Instance.cs" />
+    <Compile Include="Lighting\UnityLightLevelController.cs" />
     <Compile Include="Logging\UnityConsoleLogger.cs" />
     <Compile Include="Messages\DragEndMessage.cs" />
     <Compile Include="Messages\DragMessageBase.cs" />

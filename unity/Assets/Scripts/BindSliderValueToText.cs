@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public class BindSliderValueToText : MonoBehaviour
 {
+#pragma warning disable 649
     [SerializeField]
     private Slider slider;
+#pragma warning restore 649
 
     private Text text;
     
