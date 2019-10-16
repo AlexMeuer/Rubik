@@ -5,9 +5,12 @@ namespace Core.Command.Messages
     public class CommandCompleteMessage : TinyMessageBase
     {
         public ICommand Command { get; }
-        public CommandCompleteMessage(object sender, ICommand command) : base(sender)
+        public ICommandHandler Handler { get; }
+        
+        public CommandCompleteMessage(object sender, ICommand command, ICommandHandler handler) : base(sender)
         {
             Command = command;
+            Handler = handler;
         }
     }
 }

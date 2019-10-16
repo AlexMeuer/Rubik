@@ -10,7 +10,9 @@ namespace Core.Command
     internal class CommandHandler : ICommandHandler, IDisposable
     {
         private readonly ITinyMessengerHub messengerHub;
-        private readonly TinyMessageSubscriptionToken subscriptionToken;
+        private readonly TinyMessageSubscriptionToken enqueueSubscriptionToken;
+        private readonly TinyMessageSubscriptionToken undoSubscriptionToken;
+        private readonly TinyMessageSubscriptionToken redoSubscriptionToken;
         private readonly ILogger logger;
         private readonly ICommandExecutor executor;
         private readonly Stack<IUndoableCommand> commandHistory;
@@ -25,7 +27,9 @@ namespace Core.Command
             commandHistory = new Stack<IUndoableCommand>();
             undoHistory = new Stack<IUndoableCommand>();
             
-            subscriptionToken = messengerHub.Subscribe<EnqueueCommandMessage>(HandleEnqueueMessage);
+            enqueueSubscriptionToken = messengerHub.Subscribe<EnqueueCommandMessage>(HandleEnqueueMessage);
+            undoSubscriptionToken = messengerHub.Subscribe<UndoCommandMessage>(m => UndoLast());
+            redoSubscriptionToken = messengerHub.Subscribe<RedoCommandMessage>(m => RedoLast());
         }
 
         public bool CanUndo => commandHistory.Count > 0;
@@ -67,7 +71,9 @@ namespace Core.Command
 
         public void Dispose()
         {
-            subscriptionToken.Dispose();
+            enqueueSubscriptionToken.Dispose();
+            undoSubscriptionToken.Dispose();
+            redoSubscriptionToken.Dispose();
         }
 
         private void HandleEnqueueMessage(EnqueueCommandMessage message)
@@ -94,7 +100,7 @@ namespace Core.Command
             
             logger.Info("Completed command: {0}", command.GetType().Name);
             
-            messengerHub.Publish(new CommandCompleteMessage(this, command));
+            messengerHub.Publish(new CommandCompleteMessage(this, command, this));
         }
     }
 }

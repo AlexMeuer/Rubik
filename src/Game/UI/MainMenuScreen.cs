@@ -9,7 +9,7 @@ namespace Game.UI
 {
     public class MainMenuScreen : ScreenBase
     {
-        private const float animDurationSeconds = 1f;
+        private const float AnimDurationSeconds = 1f;
             
         private readonly UnityAction onStartPressed;
         private readonly UnityAction onQuitPressed;
@@ -56,20 +56,20 @@ namespace Game.UI
 
         public override void AnimateIn(Action onComplete = null)
         {
-            title.transform.DOScale(Vector3.zero, animDurationSeconds)
+            title.transform.DOScale(Vector3.zero, AnimDurationSeconds)
                 .From()
                 .SetEase(Ease.OutBounce);
             
-            startButton.transform.DOScale(Vector3.zero, animDurationSeconds)
+            startButton.transform.DOScale(Vector3.zero, AnimDurationSeconds)
                 .From()
                 .SetEase(Ease.OutBounce);
 
-            quitButton.transform.DOScale(Vector3.zero, animDurationSeconds)
+            quitButton.transform.DOScale(Vector3.zero, AnimDurationSeconds)
                 .From()
                 .SetEase(Ease.OutBounce)
                 .SetDelay(0.2f);
             
-            cubeSizeSlider.transform.DOScale(Vector3.zero, animDurationSeconds)
+            cubeSizeSlider.transform.DOScale(Vector3.zero, AnimDurationSeconds)
                 .From()
                 .SetEase(Ease.OutBounce)
                 .SetDelay(0.4f)
@@ -78,13 +78,13 @@ namespace Game.UI
 
         public override void AnimateOut(Action onComplete = null)
         {
-            title.transform.DOScale(Vector3.zero, animDurationSeconds);
+            title.transform.DOScale(Vector3.zero, AnimDurationSeconds);
 
-            startButton.transform.DOScale(Vector3.zero, animDurationSeconds);
+            startButton.transform.DOScale(Vector3.zero, AnimDurationSeconds);
 
-            quitButton.transform.DOScale(Vector3.zero, animDurationSeconds);
+            quitButton.transform.DOScale(Vector3.zero, AnimDurationSeconds);
             
-            cubeSizeSlider.transform.DOScale(Vector3.zero, animDurationSeconds)
+            cubeSizeSlider.transform.DOScale(Vector3.zero, AnimDurationSeconds)
                 .OnComplete(() => onComplete?.Invoke());;
         }
 

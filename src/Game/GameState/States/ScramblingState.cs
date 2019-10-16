@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using Core.Command;
 using Core.Command.Messages;
+using Core.IoC;
 using Core.Lighting;
 using Core.Messages;
 using Core.State;
 using Core.TinyMessenger;
 using Game.Command;
 using Game.Cube;
+using Game.UI;
 using UnityEngine;
 using ILogger = Core.Logging.ILogger;
 using Random = UnityEngine.Random;
@@ -16,8 +19,8 @@ namespace Game.GameState.States
     {
         private delegate Slice SliceFinder(Vector3 position);
 
-        private const int RandomMoveCountMin = 10;
-        private const int RandomMoveCountMax = 20;
+        private const int RandomMoveCountMin = 3;
+        private const int RandomMoveCountMax = 4;
 
         private readonly ILightLevelController lightLevelController;
         private readonly float randomPointVariance;
@@ -56,7 +59,7 @@ namespace Game.GameState.States
 
         protected override void OnExit()
         {
-            MessengerHub.Unsubscribe<CommandCompleteMessage>(commandFinishedSubscriptionToken);
+            commandFinishedSubscriptionToken.Dispose();
 
             lightLevelController.TurnOn();
         }
@@ -77,7 +80,13 @@ namespace Game.GameState.States
             }
             else
             {
-                Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube));
+                var screen = new InGameScreen(MessengerHub);
+                
+                screen.Build();
+                
+                screen.AnimateIn();
+                
+                Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube, screen));
             }
         }
 

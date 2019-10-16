@@ -53,6 +53,8 @@
     <Compile Include="Command\ICommandHandler.cs" />
     <Compile Include="Command\Messages\CommandCompleteMessage.cs" />
     <Compile Include="Command\Messages\EnqueueCommandMessage.cs" />
+    <Compile Include="Command\Messages\RedoCommandMessage.cs" />
+    <Compile Include="Command\Messages\UndoCommandMessage.cs" />
     <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="Extensions\FloatExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

@@ -65,7 +65,7 @@ namespace Game.Camera
             
             context.Disable();
             
-            messengerHub.Unsubscribe<DisableCameraControlMessage>(enableDisableSubscriptionToken);
+            enableDisableSubscriptionToken.Dispose();
 
             enableDisableSubscriptionToken = messengerHub.Subscribe<EnableCameraControlMessage>(EnableControl);
             
@@ -79,7 +79,7 @@ namespace Game.Camera
             
             context.Enable();
             
-            messengerHub.Unsubscribe<DisableCameraControlMessage>(enableDisableSubscriptionToken);
+            enableDisableSubscriptionToken.Dispose();
 
             enableDisableSubscriptionToken = messengerHub.Subscribe<DisableCameraControlMessage>(DisableControl);
             

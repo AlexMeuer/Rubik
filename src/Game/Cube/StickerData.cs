@@ -20,5 +20,10 @@ namespace Game.Cube
             Y = y;
             Z = z;
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(Directions)}: {Directions}, {nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
+        }
     }
 }
