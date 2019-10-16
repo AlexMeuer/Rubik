@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Extensions;
 using Core.State;
+using Core.Timer;
 using Core.TinyMessenger;
 using Domain;
 using Game.Cube;
@@ -19,11 +19,13 @@ namespace Game.GameState.States
         private static readonly Func<StickerData, FaceColor> SelectZ = sd => sd.Z;
 
         private readonly IScreen screen;
+        private readonly ITimer timer;
 
         public CheckingSolvedState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger,
-            IRubiksCube rubiksCube, IScreen screen) : base(context, messengerHub, logger, rubiksCube)
+            IRubiksCube rubiksCube, IScreen screen, ITimer timer) : base(context, messengerHub, logger, rubiksCube)
         {
             this.screen = screen;
+            this.timer = timer;
         }
 
         private bool IsSolved
@@ -47,11 +49,13 @@ namespace Game.GameState.States
             {
                 screen.AnimateOut(screen.Dispose);
                 
-                Context.TransitionTo(new SolvedState(Context, MessengerHub, Logger, RubiksCube));
+                timer.Stop();
+                
+                Context.TransitionTo(new SolvedState(Context, MessengerHub, Logger, RubiksCube, timer.Elapsed));
             }
             else
             {
-                Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube, screen));
+                Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube, screen, timer));
             }
         }
 

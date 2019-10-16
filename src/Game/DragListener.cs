@@ -1,10 +1,12 @@
+using System;
+using Core.Messages;
 using Core.TinyMessenger;
 using Game.Messages;
 using UnityEngine;
 
 namespace Game
 {
-    public interface IDragListener
+    public interface IDragListener : IDisposable
     {
         void Poll();
     }
@@ -12,6 +14,7 @@ namespace Game
     public class MouseDragListener : IDragListener
     {
         private readonly ITinyMessengerHub messengerHub;
+        private readonly TinyMessageSubscriptionToken updateSubscriptionToken;
         private Vector3 startPosition;
         private Vector3 lastUpdatePosition;
         private bool mouseIsDown;
@@ -19,6 +22,7 @@ namespace Game
         public MouseDragListener(ITinyMessengerHub messengerHub)
         {
             this.messengerHub = messengerHub;
+            updateSubscriptionToken = messengerHub.Subscribe<UpdateMessage>(m => Poll());
         }
 
         public void Poll()
@@ -43,6 +47,11 @@ namespace Game
                 
                 lastUpdatePosition = Input.mousePosition;
             }
+        }
+
+        public void Dispose()
+        {
+            updateSubscriptionToken.Dispose();
         }
     }
 }

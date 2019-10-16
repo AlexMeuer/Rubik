@@ -1,22 +1,19 @@
 using Core.IoC;
+using Core.Messages;
 using UnityEngine;
 
 namespace Game
 {
     public partial class EntryPoint : MonoBehaviour
     {
-        private IDragListener dragListener;
-        
         public  void Awake()
         {
             Initialise();
-            
-            dragListener = IoC.Resolve<IDragListener>();
         }
 
         public void Update()
         {
-            dragListener.Poll();
+            messengerHub.Publish(new UpdateMessage(this, Time.deltaTime));
         }
 
         private void OnDestroy()

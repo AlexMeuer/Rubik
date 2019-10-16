@@ -1,6 +1,7 @@
 using System;
-using Core.Command;
 using Core.Command.Messages;
+using Core.Extensions;
+using Core.Timer;
 using Core.TinyMessenger;
 using DG.Tweening;
 using UnityEngine;
@@ -14,23 +15,31 @@ namespace Game.UI
         private const float AnimDurationSeconds = 1f;
 
         private readonly ITinyMessengerHub messengerHub;
-            
+        private readonly ITimer timer;
+
         private Rect buttonRect;
         private GameObject undoButton;
         private GameObject redoButton;
+        private GameObject timerText;
         private TinyMessageSubscriptionToken cmdCompletedSubscriptionToken;
 
         private bool canUndo;
         private bool canRedo;
 
-        public InGameScreen(ITinyMessengerHub messengerHub)
+        public InGameScreen(ITinyMessengerHub messengerHub, ITimer timer)
         {
             this.messengerHub = messengerHub;
+            this.timer = timer;
         }
 
         public override void Build()
         {
+            var textPrefab = Resources.Load<GameObject>("Prefabs/TitleText");
             var undoButtonPrefab = Resources.Load<GameObject>("Prefabs/UndoButton");
+
+            timerText = Object.Instantiate(textPrefab, CanvasObject.transform);
+            timerText.name = "Timer";
+            
             buttonRect = undoButtonPrefab.GetComponent<RectTransform>().rect;
 
             const float margin = 20f;
@@ -54,10 +63,14 @@ namespace Game.UI
             redoButton.GetComponent<Button>().onClick.AddListener(RedoRequested);
 
             cmdCompletedSubscriptionToken = messengerHub.Subscribe<CommandCompleteMessage>(OnCommandCompleted);
+            
+            timer.AddListener(OnTimerUpdate);
         }
 
         public override void AnimateIn(Action onComplete = null)
         {
+            timerText.SetActive(true);
+            
             undoButton.transform.DOMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
                 .From()
                 .SetEase(Ease.OutBounce)
@@ -71,18 +84,22 @@ namespace Game.UI
 
         public override void AnimateOut(Action onComplete = null)
         {
+            timerText.SetActive(false);
+            
             undoButton.transform.DOMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
-                .SetEase(Ease.OutBounce)
+                .SetEase(Ease.InBounce)
                 .OnComplete(() => onComplete?.Invoke());
             
             redoButton.transform.DOMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
-                .SetEase(Ease.OutBounce)
+                .SetEase(Ease.InBounce)
                 .OnComplete(() => onComplete?.Invoke());
         }
 
         public override void Dispose()
         {
+            timer.RemoveListener(OnTimerUpdate);
             cmdCompletedSubscriptionToken.Dispose();
+            Object.Destroy(timerText);
             Object.Destroy(redoButton);
             Object.Destroy(undoButton);
         }
@@ -109,7 +126,12 @@ namespace Game.UI
         
         private void RedoRequested() => messengerHub.Publish(new RedoCommandMessage(this));
 
-        private void SetEnabled(Button button, bool enabled)
+        private void OnTimerUpdate(TimeSpan elapsed)
+        {
+            timerText.GetComponent<Text>().text = "{0:00}:{1:00}".Format((int)elapsed.TotalMinutes, elapsed.Seconds);
+        }
+
+        private static void SetEnabled(Button button, bool enabled)
         {
             button.interactable = enabled;
             button.image.color = enabled ? Color.white : Color.gray;

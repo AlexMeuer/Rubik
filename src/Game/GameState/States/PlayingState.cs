@@ -2,6 +2,7 @@ using Core.Command.Messages;
 using Core.Logging;
 using Core.Messages;
 using Core.State;
+using Core.Timer;
 using Core.TinyMessenger;
 using Game.Command;
 using Game.Cube;
@@ -13,14 +14,17 @@ namespace Game.GameState.States
     public class PlayingState : CubeGameStateBase
     {
         private readonly IScreen screen;
+        private readonly ITimer timer;
         
         private TinyMessageSubscriptionToken rotateCommandSubscriptionToken;
         private TinyMessageSubscriptionToken dragEndSubscriptionToken;
         
-        public PlayingState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, IRubiksCube cube, IScreen screen)
+        public PlayingState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, IRubiksCube cube,
+            IScreen screen, ITimer timer)
             : base(context, messengerHub, logger, cube)
         {
             this.screen = screen;
+            this.timer = timer;
         }
 
         protected override void OnEnter()
@@ -47,7 +51,7 @@ namespace Game.GameState.States
         {
             if (message.Command is RotateSliceCommand)
             {
-                Context.TransitionTo(new ExecutingUserMoveState(Context, MessengerHub, Logger, RubiksCube, screen));
+                Context.TransitionTo(new ExecutingUserMoveState(Context, MessengerHub, Logger, RubiksCube, screen, timer));
             }
         }
     }

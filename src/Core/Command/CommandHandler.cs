@@ -85,6 +85,8 @@ namespace Core.Command
                 logger.Info("Executing undoable command: {0}", cmd.GetType().Name);
 
                 commandHistory.Push(undoableCommand);
+                
+                undoHistory.Clear();
             }
             else if (message.Transient)
             {

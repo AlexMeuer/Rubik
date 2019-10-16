@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
-using Core.Command;
 using Core.Command.Messages;
 using Core.IoC;
 using Core.Lighting;
 using Core.Messages;
 using Core.State;
+using Core.Timer;
 using Core.TinyMessenger;
 using Game.Command;
 using Game.Cube;
@@ -80,13 +81,22 @@ namespace Game.GameState.States
             }
             else
             {
-                var screen = new InGameScreen(MessengerHub);
-                
-                screen.Build();
-                
-                screen.AnimateIn();
-                
-                Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube, screen));
+                try
+                {
+                    var timer = IoC.Resolve<ITimer>();
+
+                    var screen = new InGameScreen(MessengerHub, timer);
+
+                    screen.Build();
+
+                    screen.AnimateIn(timer.Start);
+
+                    Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube, screen, timer));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                }
             }
         }
 
