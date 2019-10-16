@@ -7,12 +7,7 @@ namespace Game
     public interface IInstance : IDisposable
     {
         Vector3 Position { get; }
-        Vector3 WorldPosition { get; }
         void RotateAbout(Vector3 axis, float angle);
-        Vector3 TransformPoint(Vector3 point);
-        Vector3 TransformDirection(Vector3 direction);
-        Vector3 InverseTransformPoint(Vector3 point);
-        Vector3 InverseTransformDirection(Vector3 direction);
         bool Is(GameObject other);
     }
     
@@ -28,8 +23,6 @@ namespace Game
             get => Self.transform.localPosition;
             set => Self.transform.localPosition = value;
         }
-
-        public Vector3 WorldPosition => Self.transform.position;
 
         protected GameObject Self { get; }
 
@@ -66,12 +59,12 @@ namespace Game
             return Self.transform.TransformDirection(direction);
         }
 
-        public Vector3 InverseTransformPoint(Vector3 point)
+        protected Vector3 InverseTransformPoint(Vector3 point)
         {
             return Self.transform.InverseTransformPoint(point);
         }
 
-        public Vector3 InverseTransformDirection(Vector3 direction)
+        protected Vector3 InverseTransformDirection(Vector3 direction)
         {
             return Self.transform.InverseTransformDirection(direction);
         }
@@ -91,12 +84,5 @@ namespace Game
         protected virtual void OnDispose()
         {
         }
-
-        protected void SetAsChild(GameObject gameObject)
-        {
-            gameObject.transform.parent = Self.transform;
-        }
-        
-        protected void SetAsChild(Instance instance) => SetAsChild(instance.Self);
     }
 }

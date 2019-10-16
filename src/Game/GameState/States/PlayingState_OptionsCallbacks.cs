@@ -6,11 +6,15 @@ namespace Game.GameState.States
 {
     public partial class PlayingState : IOptionsScreenCallbacks
     {
+        private const string keyTimerVisible = "TimerVisible";
+        
         private IScreen optionsScreen;
         
         public void OnChangeTimerVisibilityRequested(bool visible)
         {
             inGameScreen.TimerIsVisible = visible;
+            
+            Context.Store.SetBool(keyTimerVisible, visible);
         }
 
         public void OnContinueRequested()

@@ -2,22 +2,18 @@ namespace Core.Extensions
 {
     public static class StringExtensions
     {
-        public static string MustEndWith(this string str, string end)
-        {
-            if (str.EndsWith(end))
-                return str;
-
-            return str + end;
-        }
-
-        public static bool IsNullOrEmpty(this string str)
-        {
-            return str == null || str.Trim().Length <= 0;
-        }
-
         public static string Format(this string str, params object[] args)
         {
             return string.Format(str, args);
+        }
+        
+        public static string Base64Encode(this string plainText) {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string Base64Decode(this string base64EncodedData) {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }
 }

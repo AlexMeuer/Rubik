@@ -35,15 +35,15 @@ RectTransform:
   - {fileID: 2254662488778410768}
   - {fileID: 1638878069052495137}
   - {fileID: 7526613530436336488}
-  - {fileID: 8691176339669316689}
-  - {fileID: 4876799522578501144}
+  - {fileID: 1542810715910143150}
+  - {fileID: 3339902541913622247}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -16.9, y: 0}
-  m_SizeDelta: {x: -390.2, y: -222.9}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_SizeDelta: {x: 323.19995, y: 243.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6446421282037406382
 CanvasRenderer:
@@ -433,7 +433,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -15}
-  m_SizeDelta: {x: 0, y: 30}
+  m_SizeDelta: {x: -24, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5462258235305061450
 CanvasRenderer:
@@ -626,7 +626,7 @@ PrefabInstance:
     - target: {fileID: 7923073064235534586, guid: f0f501ed8c8c54948a9223afdf054c21,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -3.0000296
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 7923073064235534586, guid: f0f501ed8c8c54948a9223afdf054c21,
         type: 3}
@@ -720,7 +720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0f501ed8c8c54948a9223afdf054c21, type: 3}
---- !u!224 &8691176339669316689 stripped
+--- !u!224 &1542810715910143150 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7923073064235534586, guid: f0f501ed8c8c54948a9223afdf054c21,
     type: 3}
@@ -890,7 +890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0f501ed8c8c54948a9223afdf054c21, type: 3}
---- !u!224 &4876799522578501144 stripped
+--- !u!224 &3339902541913622247 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7923073064235534586, guid: f0f501ed8c8c54948a9223afdf054c21,
     type: 3}

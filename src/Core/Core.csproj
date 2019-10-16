@@ -73,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="State\IState.cs" />
     <Compile Include="State\StateContext.cs" />
+    <Compile Include="Store\IStore.cs" />
     <Compile Include="Timer\ITimer.cs" />
     <Compile Include="Timer\SubscribingTimer.cs" />
     <Compile Include="TinyMessenger\TinyMessenger.cs" />

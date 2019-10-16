@@ -1,25 +1,20 @@
 using System.Collections.Generic;
-using Core.TinyMessenger;
 using UnityEngine;
-using ILogger = Core.Logging.ILogger;
 
 namespace Game.Cube.Factory
 {
     public interface IRubiksCubeFactory
     {
         IRubiksCube Create(int widthHeight);
+        IRubiksCube Create(IEnumerable<StickerData> stickerData);
     }
     
     internal class RubiksCubeFactory : IRubiksCubeFactory
     {
-        private readonly ILogger logger;
-        private readonly ITinyMessengerHub messengerHub;
         private readonly IPieceFactory pieceFactory;
 
-        public RubiksCubeFactory(ILogger logger, ITinyMessengerHub messengerHub, IPieceFactory pieceFactory)
+        public RubiksCubeFactory(IPieceFactory pieceFactory)
         {
-            this.logger = logger;
-            this.messengerHub = messengerHub;
             this.pieceFactory = pieceFactory;
         }
 
@@ -44,6 +39,11 @@ namespace Game.Cube.Factory
             }
             
             return new RubiksCube(root, pieces, cubesPerRow);
+        }
+
+        public IRubiksCube Create(IEnumerable<StickerData> stickerData)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

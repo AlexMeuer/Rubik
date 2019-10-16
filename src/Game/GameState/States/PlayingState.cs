@@ -30,6 +30,8 @@ namespace Game.GameState.States
             inGameScreen = new InGameScreen(messengerHub, timer);
             
             inGameScreen.Build();
+
+            inGameScreen.TimerIsVisible = Context.Store.GetBool(keyTimerVisible, true);
         }
 
         protected override void OnEnter()

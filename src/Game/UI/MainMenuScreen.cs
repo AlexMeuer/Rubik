@@ -40,13 +40,13 @@ namespace Game.UI
             startButton = Object.Instantiate(textButton, CanvasObject.transform);
             startButton.name = "StartButton";
             startButton.GetComponentInChildren<Text>().text = "start";
-            startButton.transform.localPosition = new Vector3(0f, -60f, 0f);
+            startButton.transform.localPosition = new Vector3(0f, -80f, 0f);
             startButton.GetComponent<Button>().onClick.AddListener(onStartPressed);
             
             quitButton = Object.Instantiate(textButton, CanvasObject.transform);
             quitButton.name = "QuitButton";
             quitButton.GetComponentInChildren<Text>().text = "quit";
-            quitButton.transform.localPosition = new Vector3(0f, -140f, 0f);
+            quitButton.transform.localPosition = new Vector3(0f, -180f, 0f);
             quitButton.GetComponent<Button>().onClick.AddListener(onQuitPressed);
 
             cubeSizeSlider = Object.Instantiate(intSlider, CanvasObject.transform);

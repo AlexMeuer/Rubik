@@ -1,24 +1,27 @@
 using System;
 using Core.Logging;
+using Core.Store;
 
 namespace Core.State
 {
     public class StateContext : IDisposable
     {
-        private readonly ILogger logger;
         private IState state;
 
+        public ILogger Logger { get; }
+        public IStore Store { get; }
         public bool IsDisabled => state == null || !state.IsActive;
 
-        public StateContext(ILogger logger)
+        public StateContext(ILogger logger, IStore store)
         {
-            this.logger = logger;
+            Logger = logger;
+            Store = store;
         }
 
 
         public void TransitionTo(IState nextState)
         {
-            logger.Info("Transitioning to {0}", nextState.GetType().Name);
+            Logger.Info("Transitioning to {0}", nextState.GetType().Name);
             
             state?.Exit();
 

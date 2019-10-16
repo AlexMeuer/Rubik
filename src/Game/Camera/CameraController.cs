@@ -3,6 +3,7 @@ using Core.Command.Messages;
 using Core.Logging;
 using Core.Messages;
 using Core.State;
+using Core.Store;
 using Core.TinyMessenger;
 using DG.Tweening;
 using Game.Camera.States;
@@ -26,7 +27,7 @@ namespace Game.Camera
         private readonly TinyMessageSubscriptionToken orbitSubscriptionToken;
         private TinyMessageSubscriptionToken enableDisableSubscriptionToken;
         
-        public CameraController(UnityEngine.Camera camera, ITinyMessengerHub messengerHub, ILogger logger)
+        public CameraController(UnityEngine.Camera camera, ITinyMessengerHub messengerHub, ILogger logger, IStore store)
         {
             this.camera = camera;
             this.messengerHub = messengerHub;
@@ -39,7 +40,7 @@ namespace Game.Camera
             defaultPosition = transform.position;
             defaultRotation = transform.rotation.eulerAngles;
             
-            context = new StateContext(this.logger);
+            context = new StateContext(this.logger, store);
             
             context.TransitionTo(
                 new WaitingForDragState(context,

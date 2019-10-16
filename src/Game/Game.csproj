@@ -64,6 +64,7 @@
     <Compile Include="Cube\CubeSolvedChecker.cs" />
     <Compile Include="Cube\Factory\PieceFactory.cs" />
     <Compile Include="Cube\Factory\RubiksCubeFactory.cs" />
+    <Compile Include="Cube\Factory\RubiksCubeSerializer.cs" />
     <Compile Include="Cube\Factory\StickerDataFactory.cs" />
     <Compile Include="Cube\Factory\StickerFactory.cs" />
     <Compile Include="Cube\Piece.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Messages\MouseDownMessage.cs" />
     <Compile Include="Messages\OptionsRequestedMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Store\PlayerPrefsStore.cs" />
     <Compile Include="UI\EndGameScreen.cs" />
     <Compile Include="UI\FreeViewScreen.cs" />
     <Compile Include="UI\InGameScreen.cs" />

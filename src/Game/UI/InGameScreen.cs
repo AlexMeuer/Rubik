@@ -51,22 +51,15 @@ namespace Game.UI
             
             buttonRect = undoButtonPrefab.GetComponent<RectTransform>().rect;
 
-            const float margin = 20f;
+            const float margin = 50f;
 
             undoButton = Object.Instantiate(undoButtonPrefab, CanvasObject.transform);
             undoButton.name = "UndoButton";
-            undoButton.transform.localPosition = new Vector3(
-                x: CanvasRect.width * 0.5f - buttonRect.width * 0.5f - margin, 
-                y: CanvasRect.height * 0.5f - buttonRect.height * 0.5f - margin, 
-                z: 0);
             
             redoButton = Object.Instantiate(undoButtonPrefab, CanvasObject.transform);
             redoButton.name = "RedoButton";
             redoButton.transform.localScale = Vector3.one;
-            redoButton.transform.localPosition = new Vector3(
-                x: CanvasRect.width * 0.5f - buttonRect.width * 0.5f - margin, 
-                y: CanvasRect.height * 0.5f - buttonRect.height * 1.5f - margin, 
-                z: 0);
+            redoButton.transform.localPosition += new Vector3(0f, -buttonRect.width - margin, 0f);
             
             optionsButton = Object.Instantiate(menuButtonPrefab, CanvasObject.transform);
             optionsButton.name = "OptionsButton";
