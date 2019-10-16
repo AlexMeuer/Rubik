@@ -9,7 +9,7 @@ using ILogger = Core.Logging.ILogger;
 
 namespace Game.GameState.States
 {
-    public class MainMenuState : GameStateBase
+    public class MainMenuState : StateBase
     {
         private readonly IRubiksCubeFactory rubiksCubeFactory;
         private readonly MainMenuScreen screen;

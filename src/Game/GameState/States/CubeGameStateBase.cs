@@ -5,7 +5,7 @@ using Game.Cube;
 
 namespace Game.GameState.States
 {
-    public abstract class CubeGameStateBase : GameStateBase
+    public abstract class CubeGameStateBase : StateBase
     {
         protected readonly IRubiksCube RubiksCube;
 

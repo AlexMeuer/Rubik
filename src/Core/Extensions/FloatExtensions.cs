@@ -1,4 +1,4 @@
-using UnityEngine;
+using System;
 
 namespace Core.Extensions
 {
@@ -11,7 +11,7 @@ namespace Core.Extensions
 
         public static bool NearlyEqual(this float a, float b, float tolerance = 0.000001f)
         {
-            return a.Equals(b) || Mathf.Abs(a - b) < tolerance;
+            return a.Equals(b) || Math.Abs(a - b) < tolerance;
         }
     }
 }

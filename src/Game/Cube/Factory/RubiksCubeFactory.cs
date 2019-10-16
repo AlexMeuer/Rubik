@@ -43,7 +43,7 @@ namespace Game.Cube.Factory
                 }
             }
             
-            return new RubiksCube(root, pieces, cubesPerRow, logger, messengerHub);
+            return new RubiksCube(root, pieces, cubesPerRow);
         }
     }
 }

@@ -52,6 +52,9 @@ namespace Game.GameState.States
             cmdCompleteSubscriptionToken.Dispose();
             optionsRequestedSubscriptionToken.Dispose();
             
+            MessengerHub.Publish(new DisableCameraControlMessage(this));
+            MessengerHub.Publish(new ResetCameraMessage(this));
+            
             timer.Stop();
             
             DisableInput();
@@ -88,7 +91,7 @@ namespace Game.GameState.States
         {
             DisableInput();
             
-            MessengerHub.Publish(new EnableCameraControlMessage(this));
+            MessengerHub.Publish(new DisableCameraControlMessage(this));
             
             timer.Stop();
             

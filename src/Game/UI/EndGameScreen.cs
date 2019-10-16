@@ -6,45 +6,43 @@ using Object = UnityEngine.Object;
 
 namespace Game.UI
 {
-    public interface IOptionsScreenCallbacks
+    public interface IEndGameScreenCallbacks
     {
-        void OnChangeTimerVisibilityRequested(bool visible);
-        void OnContinueRequested();
-        void OnQuitRequested();
+        void OnReturnRequested();
+        void OnStayRequested();
     }
     
-    public class OptionsScreen : ScreenBase
+    public class EndGameScreen : ScreenBase
     {
         private const float AnimDurationSeconds = 0.75f;
-        private readonly IOptionsScreenCallbacks callbacks;
-        private readonly bool timerIsVisible;
+        
+        private readonly TimeSpan timeToSolve;
+        private readonly IEndGameScreenCallbacks callbacks;
 
         private GameObject panel;
         private float offscreenY;
 
-        public OptionsScreen(IOptionsScreenCallbacks callbacks, bool timerIsVisible)
+        public EndGameScreen(TimeSpan timeToSolve, IEndGameScreenCallbacks callbacks)
         {
+            this.timeToSolve = timeToSolve;
             this.callbacks = callbacks;
-            this.timerIsVisible = timerIsVisible;
         }
 
         public override void Build()
         {
-            var prefab = Resources.Load<GameObject>("Prefabs/OptionsPanel");
+            var prefab = Resources.Load<GameObject>("Prefabs/EndDialog");
 
             panel = Object.Instantiate(prefab, CanvasObject.transform);
             
             offscreenY = CanvasRect.width * 0.6f + panel.GetComponent<RectTransform>().rect.height;
 
-            var toggle = panel.transform.Find("Toggle").GetComponent<Toggle>();
-            toggle.isOn = timerIsVisible;
-            toggle.onValueChanged.AddListener(callbacks.OnChangeTimerVisibilityRequested);
+            panel.transform.Find("Minutes_Count").GetComponent<Text>().text = ((int)timeToSolve.TotalMinutes).ToString();
 
-            var continueButton = panel.transform.Find("ContinueButton").GetComponent<Button>();
-            continueButton.onClick.AddListener(callbacks.OnContinueRequested);
-
-            var quitButton = panel.transform.Find("QuitButton").GetComponent<Button>();
-            quitButton.onClick.AddListener(callbacks.OnQuitRequested);
+            panel.transform.Find("Seconds_Count").GetComponent<Text>().text = timeToSolve.Seconds.ToString();
+            
+            panel.transform.Find("ReturnButton").GetComponent<Button>().onClick.AddListener(callbacks.OnReturnRequested);
+            
+            panel.transform.Find("StayButton").GetComponent<Button>().onClick.AddListener(callbacks.OnStayRequested);
         }
 
         public override void AnimateIn(Action onComplete = null)

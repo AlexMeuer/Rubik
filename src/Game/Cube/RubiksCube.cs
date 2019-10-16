@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Command.Messages;
 using Core.Extensions;
 using Core.IoC;
-using Core.TinyMessenger;
 using DG.Tweening;
 using Game.Command;
 using Game.Extensions;
 using Game.Messages;
 using UnityEngine;
-using ILogger = Core.Logging.ILogger;
 
 namespace Game.Cube
 {
@@ -33,20 +30,16 @@ namespace Game.Cube
     public class RubiksCube : Instance, IRubiksCube
     {
         private const float MinimumDragDistance = 30f;
-        private const float PositionMatchingTolerance = 0.51f;
+        private const float PositionMatchingTolerance = 0.49f;
         
-        private readonly ILogger logger;
-        private readonly ITinyMessengerHub messengerHub;
         private readonly IEnumerable<IPiece> pieces;
 
         public int PiecesPerRow { get; }
 
-        public RubiksCube(GameObject gameObject, IEnumerable<IPiece> pieces, int piecesPerRow, ILogger logger, ITinyMessengerHub messengerHub)
+        public RubiksCube(GameObject gameObject, IEnumerable<IPiece> pieces, int piecesPerRow)
             : base(nameof(RubiksCube), gameObject, null)
         {
             this.pieces = pieces;
-            this.logger = logger;
-            this.messengerHub = messengerHub;
             PiecesPerRow = piecesPerRow;
         }
 

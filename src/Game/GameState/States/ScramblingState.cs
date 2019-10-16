@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Core.Command.Messages;
 using Core.IoC;
@@ -9,7 +8,6 @@ using Core.Timer;
 using Core.TinyMessenger;
 using Game.Command;
 using Game.Cube;
-using Game.UI;
 using UnityEngine;
 using ILogger = Core.Logging.ILogger;
 using Random = UnityEngine.Random;
@@ -20,8 +18,8 @@ namespace Game.GameState.States
     {
         private delegate Slice SliceFinder(Vector3 position);
 
-        private const int RandomMoveCountMin = 8;
-        private const int RandomMoveCountMax = 10;
+        private const int RandomMoveCountMin = 3;
+        private const int RandomMoveCountMax = 4;
 
         private readonly ILightLevelController lightLevelController;
         private readonly float randomPointVariance;

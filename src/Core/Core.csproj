@@ -42,9 +42,6 @@
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\..\..\..\Applications\Unity\Unity.app\Contents\Managed\UnityEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\CommandHandler.cs" />
@@ -65,8 +62,11 @@
     <Compile Include="Lighting\ILightLevelController.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\PrefixedLogger.cs" />
+    <Compile Include="Messages\CameraOrbitRequestMessage.cs" />
     <Compile Include="Messages\DisableCameraControlMessage.cs" />
     <Compile Include="Messages\EnableCameraControlMessage.cs" />
+    <Compile Include="Messages\OnCompleteMessage.cs" />
+    <Compile Include="Messages\ResetCameraMessage.cs" />
     <Compile Include="Messages\SetPausedMessage.cs" />
     <Compile Include="Messages\SpinCamera360Message.cs" />
     <Compile Include="Messages\UpdateMessage.cs" />
