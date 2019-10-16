@@ -67,6 +67,7 @@
     <Compile Include="Logging\PrefixedLogger.cs" />
     <Compile Include="Messages\DisableCameraControlMessage.cs" />
     <Compile Include="Messages\EnableCameraControlMessage.cs" />
+    <Compile Include="Messages\SetPausedMessage.cs" />
     <Compile Include="Messages\SpinCamera360Message.cs" />
     <Compile Include="Messages\UpdateMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

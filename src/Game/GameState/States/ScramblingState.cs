@@ -20,8 +20,8 @@ namespace Game.GameState.States
     {
         private delegate Slice SliceFinder(Vector3 position);
 
-        private const int RandomMoveCountMin = 3;
-        private const int RandomMoveCountMax = 4;
+        private const int RandomMoveCountMin = 8;
+        private const int RandomMoveCountMax = 10;
 
         private readonly ILightLevelController lightLevelController;
         private readonly float randomPointVariance;
@@ -53,9 +53,13 @@ namespace Game.GameState.States
 
             MessengerHub.Publish(new EnableCameraControlMessage(this));
 
-            lightLevelController.TurnOff(delay: 1f);
 
-            RotateRandomSlice();
+            RubiksCube.AnimateIn(() =>
+            {
+                lightLevelController.TurnOff(delay: 1f);
+
+                RotateRandomSlice();
+            });
         }
 
         protected override void OnExit()
@@ -81,22 +85,12 @@ namespace Game.GameState.States
             }
             else
             {
-                try
-                {
-                    var timer = IoC.Resolve<ITimer>();
+                var timer = IoC.Resolve<ITimer>();
+                var checker = IoC.Resolve<ICubeSolvedChecker>();
 
-                    var screen = new InGameScreen(MessengerHub, timer);
+                var state = new PlayingState(Context, MessengerHub, Logger, RubiksCube, timer, checker);
 
-                    screen.Build();
-
-                    screen.AnimateIn(timer.Start);
-
-                    Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube, screen, timer));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
+                Context.TransitionTo(state);
             }
         }
 

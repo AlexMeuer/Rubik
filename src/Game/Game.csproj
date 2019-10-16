@@ -61,6 +61,7 @@
     <Compile Include="Command\RotateGameObjectCommand.cs" />
     <Compile Include="Command\RotateSliceCommand.cs" />
     <Compile Include="ContainerRegistrations.cs" />
+    <Compile Include="Cube\CubeSolvedChecker.cs" />
     <Compile Include="Cube\Factory\PieceFactory.cs" />
     <Compile Include="Cube\Factory\RubiksCubeFactory.cs" />
     <Compile Include="Cube\Factory\StickerDataFactory.cs" />
@@ -75,14 +76,13 @@
     <Compile Include="Extensions\FaceColorExtensions.cs" />
     <Compile Include="Extensions\Vector3Extensions.cs" />
     <Compile Include="GameState\GameStateController.cs" />
-    <Compile Include="GameState\States\CheckingSolvedState.cs" />
     <Compile Include="GameState\States\CubeGameStateBase.cs" />
     <Compile Include="GameState\States\EndMenuState.cs" />
-    <Compile Include="GameState\States\ExecutingUserMoveState.cs" />
     <Compile Include="GameState\States\GameStateBase.cs" />
     <Compile Include="GameState\States\MainMenuState.cs" />
     <Compile Include="GameState\States\PausedState.cs" />
     <Compile Include="GameState\States\PlayingState.cs" />
+    <Compile Include="GameState\States\PlayingState_OptionsCallbacks.cs" />
     <Compile Include="GameState\States\ScramblingState.cs" />
     <Compile Include="GameState\States\SolvedState.cs" />
     <Compile Include="Instance.cs" />
@@ -92,10 +92,12 @@
     <Compile Include="Messages\DragMessageBase.cs" />
     <Compile Include="Messages\DragProgressMessage.cs" />
     <Compile Include="Messages\MouseDownMessage.cs" />
+    <Compile Include="Messages\OptionsRequestedMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\InGameScreen.cs" />
     <Compile Include="UI\IScreen.cs" />
     <Compile Include="UI\MainMenuScreen.cs" />
+    <Compile Include="UI\OptionsScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj">

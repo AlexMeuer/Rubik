@@ -44,6 +44,7 @@
     <Compile Include="ColorMap.cs" />
     <Compile Include="ContainerRegistrations.cs" />
     <Compile Include="FaceColor.cs" />
+    <Compile Include="Messages\CubeSolvedMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

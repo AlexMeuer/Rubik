@@ -5,6 +5,7 @@ using Core.Command.Messages;
 using Core.Extensions;
 using Core.IoC;
 using Core.TinyMessenger;
+using DG.Tweening;
 using Game.Command;
 using Game.Extensions;
 using Game.Messages;
@@ -21,9 +22,12 @@ namespace Game.Cube
         Slice FindYAxisSlice(Vector3 localPosition);
         Slice FindZAxisSlice(Vector3 localPosition);
 
-        void AcceptDragInput(DragEndMessage message);
+        bool AcceptDragInput(DragEndMessage message, out RotateSliceCommand command);
 
         IEnumerable<StickerData> GetStickerData();
+
+        void AnimateIn(Action onComplete = null);
+        void AnimateOut(Action onComplete = null);
     }
     
     public class RubiksCube : Instance, IRubiksCube
@@ -46,15 +50,17 @@ namespace Game.Cube
             PiecesPerRow = piecesPerRow;
         }
 
-        public void AcceptDragInput(DragEndMessage drag)
+        public bool AcceptDragInput(DragEndMessage drag, out RotateSliceCommand command)
         {
-            if (drag.Length < MinimumDragDistance)
-                return;
+            command = null;
             
+            if (drag.Length < MinimumDragDistance)
+                return false;
+
             var camera = IoC.Resolve<UnityEngine.Camera>(); // TODO: Remove use of IoC in methods
             var ray = camera.ScreenPointToRay(drag.StartPosition);
 
-            if (!Physics.Raycast(ray, out var hit)) return;
+            if (!Physics.Raycast(ray, out var hit)) return false;
             
             var piece = pieces.First(p => p.Is(hit.transform.gameObject));
             
@@ -66,8 +72,6 @@ namespace Game.Cube
             
             // logger.Info("Direction: {0}, Axis: {1}", direction, axis);
 
-            RotateSliceCommand cmd = null;
-
             if (axis.y != 0)
             {
                 var sign = Math.Sign(direction.x);
@@ -75,7 +79,7 @@ namespace Game.Cube
                     sign = Math.Sign(direction.z);
                 
                 // We flip the comparison on this one because of the positive direction on Z in unity.
-                cmd = new RotateSliceCommand(FindYAxisSlice(piece.Position), sign > 0);
+                command = new RotateSliceCommand(FindYAxisSlice(piece.Position), sign > 0);
                 
             } else if (axis.x != 0)
             {
@@ -83,7 +87,7 @@ namespace Game.Cube
                 if (sign == 0) 
                     sign = Math.Sign(direction.z);
                 
-                cmd =  new RotateSliceCommand(FindXAxisSlice(piece.Position), sign < 0);
+                command =  new RotateSliceCommand(FindXAxisSlice(piece.Position), sign < 0);
                 
             } else if (axis.z != 0)
             {
@@ -91,12 +95,11 @@ namespace Game.Cube
                 if (sign == 0) 
                     sign = Math.Sign(direction.y);
                 
-                cmd = new RotateSliceCommand(FindZAxisSlice(piece.Position), sign < 0);
+                command = new RotateSliceCommand(FindZAxisSlice(piece.Position), sign < 0);
                 
             }
-            
-            if (cmd != null)
-                messengerHub.Publish(new EnqueueCommandMessage(this, cmd));
+
+            return command != null;
         }
 
         public Slice FindXAxisSlice(Vector3 localPosition)
@@ -127,6 +130,21 @@ namespace Game.Cube
         public IEnumerable<StickerData> GetStickerData()
         {
             return pieces.Select(p => p.StickerData);
+        }
+
+        public void AnimateIn(Action onComplete = null)
+        {
+            Self.transform.DOLocalMoveY(10f, 3f)
+                .From()
+                .SetEase(Ease.OutBounce)
+                .OnComplete(() => onComplete?.Invoke());
+        }
+
+        public void AnimateOut(Action onComplete = null)
+        {
+            Self.transform.DOLocalMoveY(10f, 1f)
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() => onComplete?.Invoke());
         }
 
         protected override void OnDispose()

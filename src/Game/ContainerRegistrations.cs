@@ -2,6 +2,7 @@ using Core.Command;
 using Core.IoC;
 using Core.Lighting;
 using Game.Camera;
+using Game.Cube;
 using Game.Cube.Factory;
 using Game.GameState;
 using Game.Lighting;
@@ -27,6 +28,7 @@ namespace Game
             Singleton<IDragListener, MouseDragListener>(container);
             Singleton<GameStateController, GameStateController>(container);
             Singleton<ILightLevelController, UnityLightLevelController>(container);
+            Singleton<ICubeSolvedChecker, CubeSolvedChecker>(container);
             
             Transient<IStickerDataFactory, StickerDataFactory>(container);
             Transient<IStickerFactory, StickerFactory>(container);

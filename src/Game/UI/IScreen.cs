@@ -7,8 +7,8 @@ namespace Game.UI
     {
         void Build();
 
-        void AnimateIn(Action onComplete);
-        void AnimateOut(Action onComplete);
+        void AnimateIn(Action onComplete = null);
+        void AnimateOut(Action onComplete = null);
 
         void SetEnabled(bool enabled);
     }

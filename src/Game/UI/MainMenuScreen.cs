@@ -1,4 +1,5 @@
 using System;
+using Core.State;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
@@ -40,13 +41,13 @@ namespace Game.UI
             startButton = Object.Instantiate(textButton, CanvasObject.transform);
             startButton.name = "StartButton";
             startButton.GetComponentInChildren<Text>().text = "start";
-            startButton.transform.localPosition = new Vector3(0f, -40f, 0f);
+            startButton.transform.localPosition = new Vector3(0f, -60f, 0f);
             startButton.GetComponent<Button>().onClick.AddListener(onStartPressed);
             
             quitButton = Object.Instantiate(textButton, CanvasObject.transform);
             quitButton.name = "QuitButton";
             quitButton.GetComponentInChildren<Text>().text = "quit";
-            quitButton.transform.localPosition = new Vector3(0f, -100f, 0f);
+            quitButton.transform.localPosition = new Vector3(0f, -140f, 0f);
             quitButton.GetComponent<Button>().onClick.AddListener(onQuitPressed);
 
             cubeSizeSlider = Object.Instantiate(intSlider, CanvasObject.transform);
@@ -56,36 +57,47 @@ namespace Game.UI
 
         public override void AnimateIn(Action onComplete = null)
         {
-            title.transform.DOScale(Vector3.zero, AnimDurationSeconds)
+            title.transform.DOScaleY(0f, AnimDurationSeconds)
                 .From()
-                .SetEase(Ease.OutBounce);
-            
-            startButton.transform.DOScale(Vector3.zero, AnimDurationSeconds)
-                .From()
-                .SetEase(Ease.OutBounce);
+                .SetEase(Ease.OutQuad);
 
-            quitButton.transform.DOScale(Vector3.zero, AnimDurationSeconds)
-                .From()
-                .SetEase(Ease.OutBounce)
-                .SetDelay(0.2f);
+            var buttonStartX = -CanvasRect.width * 0.5f - startButton.GetComponent<RectTransform>().rect.width * 0.5f;
             
-            cubeSizeSlider.transform.DOScale(Vector3.zero, AnimDurationSeconds)
+            startButton.transform.DOLocalMoveX(buttonStartX, AnimDurationSeconds)
                 .From()
-                .SetEase(Ease.OutBounce)
-                .SetDelay(0.4f)
+                .SetDelay(0.6f)
+                .SetEase(Ease.OutQuad);
+
+            quitButton.transform.DOLocalMoveX(buttonStartX, AnimDurationSeconds)
+                .From()
+                .SetEase(Ease.OutQuad)
+                .SetDelay(0.9f)
                 .OnComplete(() => onComplete?.Invoke());
+            
+            cubeSizeSlider.transform.DOLocalMoveX(buttonStartX, AnimDurationSeconds)
+                .From()
+                .SetEase(Ease.OutQuad)
+                .SetDelay(0.3f);
         }
 
         public override void AnimateOut(Action onComplete = null)
         {
-            title.transform.DOScale(Vector3.zero, AnimDurationSeconds);
+            title.transform.DOScaleY(0f, AnimDurationSeconds)
+                .SetEase(Ease.InQuad);
 
-            startButton.transform.DOScale(Vector3.zero, AnimDurationSeconds);
-
-            quitButton.transform.DOScale(Vector3.zero, AnimDurationSeconds);
+            var buttonEndX = CanvasRect.width * 0.5f + startButton.GetComponent<RectTransform>().rect.width * 0.5f;
             
-            cubeSizeSlider.transform.DOScale(Vector3.zero, AnimDurationSeconds)
-                .OnComplete(() => onComplete?.Invoke());;
+            startButton.transform.DOLocalMoveX(buttonEndX, AnimDurationSeconds)
+                .SetDelay(0.3f)
+                .SetEase(Ease.InQuad);
+
+            quitButton.transform.DOLocalMoveX(buttonEndX, AnimDurationSeconds)
+                .SetEase(Ease.InQuad)
+                .SetDelay(0.6f)
+                .OnComplete(() => onComplete?.Invoke());
+            
+            cubeSizeSlider.transform.DOLocalMoveX(buttonEndX, AnimDurationSeconds)
+                .SetEase(Ease.InQuad);
         }
 
         public override void Dispose()

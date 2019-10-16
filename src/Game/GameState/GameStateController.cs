@@ -1,3 +1,4 @@
+using System;
 using Core.IoC;
 using Core.Logging;
 using Core.State;
@@ -7,7 +8,7 @@ using Game.GameState.States;
 
 namespace Game.GameState
 {
-    public class GameStateController
+    public class GameStateController : IDisposable
     {
         private readonly ITinyMessengerHub messengerHub;
         private readonly ILogger logger;
@@ -21,6 +22,11 @@ namespace Game.GameState
             context = new StateContext(this.logger);
             
             context.TransitionTo(new MainMenuState(context, messengerHub, logger, IoC.Resolve<IRubiksCubeFactory>()));
+        }
+
+        public void Dispose()
+        {
+            context.Dispose();
         }
     }
 }

@@ -4,6 +4,7 @@ using Core.Extensions;
 using Core.Timer;
 using Core.TinyMessenger;
 using DG.Tweening;
+using Game.Messages;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -21,10 +22,17 @@ namespace Game.UI
         private GameObject undoButton;
         private GameObject redoButton;
         private GameObject timerText;
+        private GameObject optionsButton;
         private TinyMessageSubscriptionToken cmdCompletedSubscriptionToken;
 
         private bool canUndo;
         private bool canRedo;
+
+        public bool TimerIsVisible
+        {
+            get => timerText.activeInHierarchy;
+            set => timerText.SetActive(value);
+        }
 
         public InGameScreen(ITinyMessengerHub messengerHub, ITimer timer)
         {
@@ -36,6 +44,7 @@ namespace Game.UI
         {
             var textPrefab = Resources.Load<GameObject>("Prefabs/TitleText");
             var undoButtonPrefab = Resources.Load<GameObject>("Prefabs/UndoButton");
+            var menuButtonPrefab = Resources.Load<GameObject>("Prefabs/OptionsButton");
 
             timerText = Object.Instantiate(textPrefab, CanvasObject.transform);
             timerText.name = "Timer";
@@ -59,8 +68,12 @@ namespace Game.UI
                 y: CanvasRect.height * 0.5f - buttonRect.height * 1.5f - margin, 
                 z: 0);
             
+            optionsButton = Object.Instantiate(menuButtonPrefab, CanvasObject.transform);
+            optionsButton.name = "OptionsButton";
+            
             undoButton.GetComponent<Button>().onClick.AddListener(UndoRequested);
             redoButton.GetComponent<Button>().onClick.AddListener(RedoRequested);
+            optionsButton.GetComponent<Button>().onClick.AddListener(OptionsRequested);
 
             cmdCompletedSubscriptionToken = messengerHub.Subscribe<CommandCompleteMessage>(OnCommandCompleted);
             
@@ -71,28 +84,33 @@ namespace Game.UI
         {
             timerText.SetActive(true);
             
-            undoButton.transform.DOMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
+            undoButton.transform.DOLocalMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
                 .From()
                 .SetEase(Ease.OutBounce)
                 .OnComplete(() => onComplete?.Invoke());
             
-            redoButton.transform.DOMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
+            redoButton.transform.DOLocalMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
                 .From()
-                .SetEase(Ease.OutBounce)
-                .OnComplete(() => onComplete?.Invoke());
+                .SetEase(Ease.OutBounce);
+
+            optionsButton.transform.DOLocalMoveX(-CanvasRect.width - buttonRect.width, AnimDurationSeconds)
+                .From()
+                .SetEase(Ease.OutBounce);
         }
 
         public override void AnimateOut(Action onComplete = null)
         {
             timerText.SetActive(false);
             
-            undoButton.transform.DOMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
-                .SetEase(Ease.InBounce)
+            undoButton.transform.DOLocalMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
+                .SetEase(Ease.InQuad)
                 .OnComplete(() => onComplete?.Invoke());
             
-            redoButton.transform.DOMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
-                .SetEase(Ease.InBounce)
-                .OnComplete(() => onComplete?.Invoke());
+            redoButton.transform.DOLocalMoveX(CanvasRect.width + buttonRect.width, AnimDurationSeconds)
+                .SetEase(Ease.InQuad);
+
+            optionsButton.transform.DOLocalMoveX(-CanvasRect.width - buttonRect.width, AnimDurationSeconds)
+                .SetEase(Ease.InQuad);
         }
 
         public override void Dispose()
@@ -100,6 +118,7 @@ namespace Game.UI
             timer.RemoveListener(OnTimerUpdate);
             cmdCompletedSubscriptionToken.Dispose();
             Object.Destroy(timerText);
+            Object.Destroy(optionsButton);
             Object.Destroy(redoButton);
             Object.Destroy(undoButton);
         }
@@ -126,12 +145,14 @@ namespace Game.UI
         
         private void RedoRequested() => messengerHub.Publish(new RedoCommandMessage(this));
 
+        private void OptionsRequested() => messengerHub.Publish(new OptionsRequestedMessage(this));
+
         private void OnTimerUpdate(TimeSpan elapsed)
         {
             timerText.GetComponent<Text>().text = "{0:00}:{1:00}".Format((int)elapsed.TotalMinutes, elapsed.Seconds);
         }
 
-        private static void SetEnabled(Button button, bool enabled)
+        private static void SetEnabled(Selectable button, bool enabled)
         {
             button.interactable = enabled;
             button.image.color = enabled ? Color.white : Color.gray;

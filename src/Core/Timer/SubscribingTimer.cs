@@ -7,14 +7,17 @@ namespace Core.Timer
     public class SubscribingTimer : ITimer
     {
         private readonly ITinyMessengerHub messengerHub;
+        private readonly TinyMessageSubscriptionToken pauseSubscriptionToken;
         private event Action<TimeSpan> Listeners;
-        private TinyMessageSubscriptionToken subscriptionToken;
+        private TinyMessageSubscriptionToken updateSubscriptionToken;
+        private bool gamePaused;
         
         public TimeSpan Elapsed { get; private set; }
 
         public SubscribingTimer(ITinyMessengerHub messengerHub)
         {
             this.messengerHub = messengerHub;
+            pauseSubscriptionToken = messengerHub.Subscribe<SetPausedMessage>(OnGamePauseMessage);
         }
         
         public void AddListener(Action<TimeSpan> onUpdate, bool invokeNow = true)
@@ -32,8 +35,8 @@ namespace Core.Timer
 
         public void Start()
         {
-            subscriptionToken?.Dispose();
-            subscriptionToken = messengerHub.Subscribe<UpdateMessage>(OnUpdate);
+            updateSubscriptionToken?.Dispose();
+            updateSubscriptionToken = messengerHub.Subscribe<UpdateMessage>(OnUpdate);
         }
 
         public void Restart()
@@ -47,15 +50,23 @@ namespace Core.Timer
 
         public void Stop()
         {
-            subscriptionToken?.Dispose();
-            subscriptionToken = null;
+            updateSubscriptionToken?.Dispose();
+            updateSubscriptionToken = null;
         }
 
         private void OnUpdate(UpdateMessage message)
         {
+            if (gamePaused)
+                return;
+            
             Elapsed += TimeSpan.FromSeconds(message.DeltaTime);
 
             Listeners?.Invoke(Elapsed);
+        }
+
+        private void OnGamePauseMessage(SetPausedMessage message)
+        {
+            gamePaused = message.Pause;
         }
     }
 }

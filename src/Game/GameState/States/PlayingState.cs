@@ -11,48 +11,146 @@ using Game.UI;
 
 namespace Game.GameState.States
 {
-    public class PlayingState : CubeGameStateBase
+    public partial class PlayingState : CubeGameStateBase
     {
-        private readonly IScreen screen;
+        private readonly ICubeSolvedChecker cubeSolvedChecker;
+        private readonly InGameScreen inGameScreen;
         private readonly ITimer timer;
         
-        private TinyMessageSubscriptionToken rotateCommandSubscriptionToken;
         private TinyMessageSubscriptionToken dragEndSubscriptionToken;
+        private TinyMessageSubscriptionToken cmdCompleteSubscriptionToken;
+        private TinyMessageSubscriptionToken optionsRequestedSubscriptionToken;
         
-        public PlayingState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, IRubiksCube cube,
-            IScreen screen, ITimer timer)
+        public PlayingState(StateContext context, ITinyMessengerHub messengerHub, ILogger logger, IRubiksCube cube, ITimer timer, ICubeSolvedChecker cubeSolvedChecker)
             : base(context, messengerHub, logger, cube)
         {
-            this.screen = screen;
             this.timer = timer;
+            this.cubeSolvedChecker = cubeSolvedChecker;
+            
+            inGameScreen = new InGameScreen(messengerHub, timer);
+            
+            inGameScreen.Build();
         }
 
         protected override void OnEnter()
         {
-            rotateCommandSubscriptionToken = MessengerHub.Subscribe<EnqueueCommandMessage>(OnEnqueueCommand);
+            cmdCompleteSubscriptionToken = MessengerHub.Subscribe<CommandCompleteMessage>(OnCommandCompleted);
 
-            dragEndSubscriptionToken = MessengerHub.Subscribe<DragEndMessage>(RubiksCube.AcceptDragInput);
+            optionsRequestedSubscriptionToken = MessengerHub.Subscribe<OptionsRequestedMessage>(OnOptionsRequested);
             
             MessengerHub.Publish(new EnableCameraControlMessage(this));
             
-            screen.SetEnabled(true);
+            EnableInput();
+            
+            timer.Start();
+            
+            inGameScreen.AnimateIn();
         }
 
         protected override void OnExit()
         {
-            rotateCommandSubscriptionToken.Dispose();
+            cmdCompleteSubscriptionToken.Dispose();
+            optionsRequestedSubscriptionToken.Dispose();
             
-            dragEndSubscriptionToken.Dispose();
+            timer.Stop();
             
-            screen.SetEnabled(false);
+            DisableInput();
+                
+            inGameScreen.AnimateOut(inGameScreen.Dispose);
         }
 
-        private void OnEnqueueCommand(EnqueueCommandMessage message)
+        private void OnDragEnd(DragEndMessage message)
         {
-            if (message.Command is RotateSliceCommand)
+            if (!RubiksCube.AcceptDragInput(message, out var command))
+                return;
+            
+            DisableInput();
+                
+            MessengerHub.Publish(new EnqueueCommandMessage(this, command));
+        }
+
+        private void OnCommandCompleted(CommandCompleteMessage message)
+        {
+            if (!(message.Command is RotateSliceCommand))
+                return;
+
+            if (cubeSolvedChecker.IsSolved(RubiksCube))
             {
-                Context.TransitionTo(new ExecutingUserMoveState(Context, MessengerHub, Logger, RubiksCube, screen, timer));
+                Context.TransitionTo(new SolvedState(Context, MessengerHub, Logger, RubiksCube, timer.Elapsed));
+            }
+            else
+            {
+                EnableInput();
             }
         }
+
+        private void OnOptionsRequested(OptionsRequestedMessage message)
+        {
+            DisableInput();
+            
+            MessengerHub.Publish(new EnableCameraControlMessage(this));
+            
+            timer.Stop();
+            
+            optionsScreen = new OptionsScreen(this, inGameScreen.TimerIsVisible);
+            
+            optionsScreen.Build();
+            
+            optionsScreen.AnimateIn();
+        }
+
+        private void EnableInput()
+        {
+            if (dragEndSubscriptionToken != null)
+                return;
+            
+            dragEndSubscriptionToken = MessengerHub.Subscribe<DragEndMessage>(OnDragEnd);
+            
+            inGameScreen.SetEnabled(true);
+        }
+
+        private void DisableInput()
+        {
+            if (dragEndSubscriptionToken == null)
+                return;
+            
+            dragEndSubscriptionToken.Dispose();
+            dragEndSubscriptionToken = null;
+            
+            inGameScreen.SetEnabled(true);
+        }
+
+        private void CloseOptionsScreen()
+        {
+            optionsScreen.AnimateOut(() =>
+            {
+                MessengerHub.Publish(new EnableCameraControlMessage(this));
+                
+                EnableInput();
+                
+                timer.Start();
+                
+                optionsScreen.Dispose();
+            });
+        }
+//        protected override void OnEnter()
+//        {
+//            if (IsSolved)
+//            {
+//                screen.AnimateOut(screen.Dispose);
+//                
+//                timer.Stop();
+//                
+//                MessengerHub.Publish(new CubeSolvedMessage(this, timer.Elapsed));
+//            }
+//            else
+//            {
+//                Context.TransitionTo(new PlayingState(Context, MessengerHub, Logger, RubiksCube, screen, timer));
+//            }
+//        }
+//
+//        protected override void OnExit()
+//        {
+//        }
     }
 }
