@@ -18,8 +18,8 @@ namespace Game.GameState.States
     {
         private delegate Slice SliceFinder(Vector3 position);
 
-        private const int RandomMoveCountMin = 3;
-        private const int RandomMoveCountMax = 4;
+        private const int RandomMoveCountMin = 10;
+        private const int RandomMoveCountMax = 20;
 
         private readonly ILightLevelController lightLevelController;
         private readonly float randomPointVariance;
